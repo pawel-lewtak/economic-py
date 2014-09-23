@@ -1,0 +1,28 @@
+[Jira]
+username=
+password=
+; Name of field in API that holds Economic project ID
+economic_field=
+; Feel free to improve search query to match your needs.
+search_query=assignee=currentUser() and status in ("In Progress") and Sprint in openSprints()
+; API endpoint, eg. https://jira.example.com/rest/api/2/
+api_url=
+
+[Economic]
+; Agreement number, should be same for all employees
+agreement=
+username=
+password=
+; Default project. Will be used for Google Calendar events
+default_project_id=
+; Default description. Will be used for all JIRA tasks
+default_description=
+; Default activity. Will be used for all JIRA tasks
+default_activity_id=
+
+[Google]
+;Provided username should end with domain name, eg. @example.com
+username=
+password=
+;List of event names to ignore.
+ignore_events=[]
