@@ -1,3 +1,4 @@
+import re
 import json
 import requests
 import datetime
@@ -35,13 +36,28 @@ class Jira:
             return
 
         for issue in tasks['issues']:
-            try:
-                task = {'date': datetime.datetime.now().isoformat()[:10],
-                        'project_id': str(issue['fields'][self.config['economic_field']]['value'].split('-')[0]),
-                        'task_description': '%s %s' % (issue['key'], issue['fields']['summary']), 'time_spent': '0'}
-                yield task
-            # Possible issue: no economic project set.
-            except KeyError:
-                if self.config['economic_field'] not in issue['fields']:
-                    print('ERROR - task %s is missing economic project ID' % (issue['key']))
+            if self.config['economic_field'] not in issue['fields']:
+                print('ERROR - task %s is missing economic project ID' % (issue['key']))
                 yield None
+            else:
+                task = {
+                    'date': datetime.datetime.now().isoformat()[:10],
+                    'project_id': self.get_project_id(issue['fields'][self.config['economic_field']]),
+                    'task_description': '%s %s' % (issue['key'], issue['fields']['summary']), 'time_spent': '0'
+                }
+                yield task
+
+    def get_project_id(self, economic_field):
+        """
+        Economic field might be either select box or input field.
+        Value might be either numeric or contain number and project's name.
+
+        :param economic_field:
+        :return: :rtype:
+        """
+        if type(economic_field) is dict:
+            project_id = str(economic_field['value'])
+        else:
+            project_id = str(economic_field)
+
+        return int(re.search(r'^\d+', project_id).group())
