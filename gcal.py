@@ -25,5 +25,5 @@ class Calendar:
                         yield {
                             'start_date': an_when.start,
                             'end_date': an_when.end,
-                            'title': an_event.title.text
+                            'title': an_event.title.text.encode('utf8')
                         }
