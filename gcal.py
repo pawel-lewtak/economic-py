@@ -2,7 +2,7 @@ import gdata.calendar.client
 import gdata.client
 
 
-class Calendar:
+class Calendar(object):
     def __init__(self, username, password, ignore_events):
         try:
             self.username = username[:username.find('@') + 1]

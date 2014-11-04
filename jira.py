@@ -1,10 +1,11 @@
+from __future__ import print_function
 import re
 import json
 import requests
 import datetime
 
 
-class Jira:
+class Jira(object):
     def __init__(self, config):
         self.config = {}
         for item in config:

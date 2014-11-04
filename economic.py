@@ -1,9 +1,10 @@
+from __future__ import print_function
 import requests
 import re
 from datetime import datetime
 
 
-class Economic:
+class Economic(object):
     def __init__(self, config):
         self.session = requests.session()
         self.tasks_html = ""
@@ -57,7 +58,7 @@ class Economic:
             print("OK - time entry added: %s" % (entry['task_description']))
             return True
 
-        print("ERROR - time entry not added. Entry: %s; Response: %s" % (entry['task_description'],  response.content))
+        print("ERROR - time entry not added. Entry: %s; Response: %s" % (entry['task_description'], response.content))
         return False
 
     def convert_calendar_event_to_entry(self, event):
@@ -85,8 +86,6 @@ class Economic:
         }
 
         return entry
-
-
 
     def convert_jira_task_to_entry(self, task):
         """
