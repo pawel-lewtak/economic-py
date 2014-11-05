@@ -44,9 +44,24 @@ class Jira(object):
                 task = {
                     'date': datetime.datetime.now().isoformat()[:10],
                     'project_id': self.get_project_id(issue['fields'][self.config['economic_field']]),
-                    'task_description': '%s %s' % (issue['key'], issue['fields']['summary']), 'time_spent': '0'
+                    'task_description': '%s %s' % (issue['key'], issue['fields']['summary']),
+                    'time_spent': str(self.get_hours(issue)).replace('.', ',')
                 }
+
                 yield task
+
+    def get_hours(self, issue):
+        hours = 0.0
+        if not int(self.config['use_worklog']):
+            return hours
+
+        now = str(datetime.datetime.now())[:10]
+        if issue['fields']['worklog']['total']:
+            for worklog in issue['fields']['worklog']['worklogs']:
+                if worklog['author']['name'] == self.config['username'] and worklog['started'].startswith(now):
+                    hours += worklog['timeSpentSeconds']
+
+        return hours / 3600
 
     def get_project_id(self, economic_field):
         """
