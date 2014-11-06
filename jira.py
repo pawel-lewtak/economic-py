@@ -51,10 +51,9 @@ class Jira(object):
             return hours
 
         now = str(datetime.datetime.now())[:10]
-        if issue['fields']['worklog']['total']:
-            for worklog in issue['fields']['worklog']['worklogs']:
-                if worklog['author']['name'] == self.config['username'] and worklog['started'].startswith(now):
-                    hours += worklog['timeSpentSeconds']
+        for worklog in issue['fields']['worklog']['worklogs']:
+            if worklog['author']['name'] == self.config['username'] and worklog['started'].startswith(now):
+                hours += worklog['timeSpentSeconds']
 
         return hours / 3600
 
