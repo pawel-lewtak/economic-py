@@ -1,6 +1,5 @@
 from __future__ import print_function
 import re
-import json
 import requests
 import datetime
 
@@ -18,13 +17,9 @@ class Jira(object):
         Generic method for making requests to JIRA API.
         """
         response = requests.get(self.config['api_url'] + uri, auth=self.auth_data)
-        try:
-            if response.status_code != 200:
-                raise Exception('ERROR: login to JIRA failed (check credentials)')
+        response.raise_for_status()
 
-            return json.loads(response.text)
-        except ValueError:
-            raise Exception("ERROR - Couldn't fetch JIRA tasks.")
+        return response.json()
 
     def get_tasks(self):
         """
