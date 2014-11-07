@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 from __future__ import print_function
-import datetime
 import ConfigParser
+import datetime
 import os
-from gcal import Calendar
-from jira import Jira
-from economic import Economic
+from economicpy.gcal import Calendar
+from economicpy.jira import Jira
+from economicpy.economic import Economic
+
 
 try:
     configFile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini')
