@@ -40,7 +40,7 @@ class Jira(object):
                     'date': datetime.datetime.now().isoformat()[:10],
                     'project_id': self.get_project_id(issue['fields'][self.config['economic_field']]),
                     'task_description': '%s %s' % (issue['key'], issue['fields']['summary']),
-                    'time_spent': str(self.get_hours(issue)).replace('.', ',')
+                    'time_spent': str(self.get_hours(issue['key'])).replace('.', ',')
                 }
 
                 yield task
@@ -51,11 +51,14 @@ class Jira(object):
             return hours
 
         now = str(datetime.datetime.now())[:10]
-        for worklog in issue['fields']['worklog']['worklogs']:
+        for worklog in self.get_worklog(issue):
             if worklog['author']['name'] == self.config['username'] and worklog['started'].startswith(now):
                 hours += worklog['timeSpentSeconds']
 
         return hours / 3600
+
+    def get_worklog(self, issue_id):
+        return self.make_request('issue/%s/worklog' % issue_id)
 
     def get_project_id(self, economic_field):
         """
