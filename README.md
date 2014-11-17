@@ -1,5 +1,6 @@
 economic-py
 ===========
+[![Build status](https://travis-ci.org/pawel-lewtak/economic-py.png)](https://travis-ci.org/pawel-lewtak/economic-py))
 
 # About
 These few files were created to help automatically pre fill Economic.
