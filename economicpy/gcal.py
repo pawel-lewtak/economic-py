@@ -9,7 +9,7 @@ from oauth2client.tools import run
 
 class Calendar(object):
     def __init__(self, client_id, client_secret, ignore_events):
-        self.user_agent = 'economic-py/0.2'
+        self.user_agent = 'economic-py/0.3'
         self.ignore_events = ignore_events
         FLAGS = gflags.FLAGS
 
