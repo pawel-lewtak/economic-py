@@ -1,29 +1,63 @@
-import gdata.calendar.client
-import gdata.client
+import gflags
+import httplib2
+
+from apiclient.discovery import build
+from oauth2client.file import Storage
+from oauth2client.client import OAuth2WebServerFlow
+from oauth2client.tools import run
 
 
 class Calendar(object):
-    def __init__(self, username, password, ignore_events):
-        try:
-            self.username = username[:username.find('@') + 1]
-            self.cal_client = gdata.calendar.client.CalendarClient(source='Google-Calendar_Python_Sample-1.0')
-            self.cal_client.ClientLogin(username, password, self.cal_client.source)
-            self.ignore_events = ignore_events
-        except gdata.client.BadAuthentication:
-            raise Exception('ERROR: login to Google failed (check credentials)')
+    def __init__(self, client_id, client_secret, ignore_events):
+        self.user_agent = 'economic-py/0.2'
+        self.ignore_events = ignore_events
+        FLAGS = gflags.FLAGS
+
+        # The client_id and client_secret can be found in Google Developers Console
+        flow = OAuth2WebServerFlow(
+            client_id=client_id,
+            client_secret=client_secret,
+            scope='https://www.googleapis.com/auth/calendar',
+            user_agent=self.user_agent)
+
+        # To disable the local server feature, uncomment the following line:
+        # FLAGS.auth_local_webserver = False
+
+        # If the Credentials don't exist or are invalid, run through the native client
+        # flow. The Storage object will ensure that if successful the good
+        # Credentials will get written back to a file.
+        storage = Storage('calendar.dat')
+        credentials = storage.get()
+        if credentials is None or credentials.invalid == True:
+            credentials = run(flow, storage)
+
+        # Create an httplib2.Http object to handle our HTTP requests and authorize it
+        # with our good Credentials.
+        http = httplib2.Http()
+        http = credentials.authorize(http)
+
+        # Build a service object for interacting with the API. Visit
+        # the Google Developers Console
+        # to get a developerKey for your own application.
+        self.service = build(serviceName='calendar', version='v3', http=http,
+                             developerKey='notsosecret')
 
     def get_events(self, start_date, end_date):
         """
         Get events from calendar between given dates.
         """
-        query = gdata.calendar.client.CalendarEventQuery(start_min=start_date, start_max=end_date, singleevents="true")
-        feed = self.cal_client.GetCalendarEventFeed(q=query)
-        for i, an_event in zip(range(len(feed.entry)), feed.entry):
-            for who in [x for x in an_event.who if self.username in x.email]:
-                if who.attendee_status is not None and "declined" not in who.attendee_status.value:
-                    for an_when in [x for x in an_event.when if an_event.title.text not in self.ignore_events]:
-                        yield {
-                            'start_date': an_when.start,
-                            'end_date': an_when.end,
-                            'title': an_event.title.text.encode('utf8')
-                        }
+        page_token = None
+
+        while True:
+            events = self.service.events().list(calendarId='primary', pageToken=page_token, singleEvents=True,
+                                                timeMin=start_date, timeMax=end_date).execute()
+            for event in events['items']:
+                if event['status'] == "confirmed" and event['summary'] not in self.ignore_events:
+                    yield {
+                        'start_date': event['start']['dateTime'],
+                        'end_date': event['end']['dateTime'],
+                        'title': event['summary'].encode('utf8')
+                    }
+            page_token = events.get('nextPageToken')
+            if not page_token:
+                break

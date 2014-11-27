@@ -17,11 +17,13 @@ Once `pip` is installed run command below to install all required python librari
 `sudo pip install -r requirements.txt`
 
 After that `config.ini.dist` to `config.ini` and update it with all required
-credentials for JIRA, Economic and Google account.
+credentials for JIRA, Economic and Google API credentials from Google Developer Console.
 
 # Usage
 Calling `python run.py` will create all economic entries for today.
 What's left it to update hours spent on each task in economic.
+
+On first run you'll be asked to grant privileges to read your Google Calendars.
 
 Due to application's limitations (see below) it advised to add new entry
 in crontab to make sure all tasks will be registered:

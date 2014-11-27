@@ -66,8 +66,8 @@ class Economic(object):
         Converts Google Calendar event object to a dict object that will later be inserted to Economic.
         """
         try:
-            start_date = datetime.strptime(event['start_date'][:-10], "%Y-%m-%dT%H:%M:%S")
-            end_date = datetime.strptime(event['end_date'][:-10], "%Y-%m-%dT%H:%M:%S")
+            start_date = datetime.strptime(event['start_date'][:19], "%Y-%m-%dT%H:%M:%S")
+            end_date = datetime.strptime(event['end_date'][:19], "%Y-%m-%dT%H:%M:%S")
         except ValueError:
             return None
 

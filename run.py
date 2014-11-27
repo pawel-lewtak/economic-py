@@ -19,10 +19,10 @@ try:
 
     # Add entries from Google Calendar.
     try:
-        calendar = Calendar(config.get('Google', 'username'), config.get('Google', 'password'),
+        calendar = Calendar(config.get('Google', 'client_id'), config.get('Google', 'client_secret'),
                             config.get('Google', 'ignore_events'))
-        today = datetime.datetime.now().isoformat()[:10]
-        tomorrow = (datetime.datetime.now() + datetime.timedelta(days=1)).isoformat()[:10]
+        today = datetime.datetime.now().isoformat()[:10] + "T00:00:00Z"
+        tomorrow = (datetime.datetime.now() + datetime.timedelta(days=1)).isoformat()[:10] + "T00:00:00Z"
         for event in calendar.get_events(today, tomorrow):
             entry = economic.convert_calendar_event_to_entry(event)
             if entry:

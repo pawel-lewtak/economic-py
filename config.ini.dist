@@ -24,8 +24,9 @@ default_description=
 default_activity_id=
 
 [Google]
-;Provided username should end with domain name, eg. @example.com
-username=
-password=
+;Credentials to fill in below can be obtained from Google Developer Console:
+;at https://console.developers.google.com/
+client_secret=
+cleint_id=
 ;List of event names to ignore.
 ignore_events=[]
