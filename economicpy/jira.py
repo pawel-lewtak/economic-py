@@ -58,7 +58,7 @@ class Jira(object):
         return hours / 3600
 
     def get_worklog(self, issue_id):
-        return self.make_request('issue/%s/worklog' % issue_id)
+        return self.make_request('issue/%s/worklog' % issue_id)['worklogs']
 
     def get_project_id(self, economic_field):
         """
