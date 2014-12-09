@@ -8,7 +8,7 @@ from oauth2client.tools import run
 
 
 class Calendar(object):
-    def __init__(self, client_id, client_secret, ignore_events):
+    def __init__(self, client_id, client_secret, ignore_events, src_path):
         self.user_agent = 'economic-py/0.3'
         self.ignore_events = ignore_events
         FLAGS = gflags.FLAGS
@@ -26,7 +26,7 @@ class Calendar(object):
         # If the Credentials don't exist or are invalid, run through the native client
         # flow. The Storage object will ensure that if successful the good
         # Credentials will get written back to a file.
-        storage = Storage('calendar.dat')
+        storage = Storage(src_path + '/calendar.dat')
         credentials = storage.get()
         if credentials is None or credentials.invalid == True:
             credentials = run(flow, storage)

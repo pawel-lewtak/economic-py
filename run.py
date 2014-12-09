@@ -9,7 +9,8 @@ from economicpy.economic import Economic
 
 
 try:
-    configFile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini')
+    src_path = os.path.abspath(os.path.dirname(__file__))
+    configFile = os.path.join(src_path, 'config.ini')
     if not os.path.isfile(configFile):
         raise Exception('Configuration file config.ini not found.')
     config = ConfigParser.ConfigParser()
@@ -20,7 +21,7 @@ try:
     # Add entries from Google Calendar.
     try:
         calendar = Calendar(config.get('Google', 'client_id'), config.get('Google', 'client_secret'),
-                            config.get('Google', 'ignore_events'))
+                            config.get('Google', 'ignore_events'), src_path)
         today = datetime.datetime.now().isoformat()[:10] + "T00:00:00Z"
         tomorrow = (datetime.datetime.now() + datetime.timedelta(days=1)).isoformat()[:10] + "T00:00:00Z"
         for event in calendar.get_events(today, tomorrow):
