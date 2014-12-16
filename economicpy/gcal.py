@@ -52,13 +52,24 @@ class Calendar(object):
             events = self.service.events().list(calendarId='primary', pageToken=page_token, singleEvents=True,
                                                 timeMin=start_date, timeMax=end_date).execute()
             for event in events['items']:
-                if event['status'] != "declined" and event['summary'] not in self.ignore_events \
-                        and 'dateTime' in event['start'] and 'dateTime' in event['end']:
-                    yield {
-                        'start_date': event['start']['dateTime'],
-                        'end_date': event['end']['dateTime'],
-                        'title': event['summary'].encode('utf8')
-                    }
+                if 'attendees' not in event:
+                    print("SKIPPED (no attendees) - %s" % (event['summary']))
+                    continue
+
+                for attendee in event['attendees']:
+                    if 'self' in attendee and attendee['responseStatus'] == 'accepted':
+                        if 'dateTime' not in event['start'] or 'dateTime' not in event['end']:
+                            print("SKIPPED (event without specific hours of start/end) - %s" % (event['summary']))
+                            break
+                        if event['summary'] not in self.ignore_events:
+                            yield {
+                                'start_date': event['start']['dateTime'],
+                                'end_date': event['end']['dateTime'],
+                                'title': event['summary'].encode('utf8')
+                            }
+                        break
+                else:
+                    print("SKIPPED (not attending)- %s" % (event['summary']))
             page_token = events.get('nextPageToken')
             if not page_token:
                 break
