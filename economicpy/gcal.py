@@ -52,7 +52,8 @@ class Calendar(object):
             events = self.service.events().list(calendarId='primary', pageToken=page_token, singleEvents=True,
                                                 timeMin=start_date, timeMax=end_date).execute()
             for event in events['items']:
-                if event['status'] != "declined" and event['summary'] not in self.ignore_events:
+                if event['status'] != "declined" and event['summary'] not in self.ignore_events \
+                        and 'dateTime' in event['start'] and 'dateTime' in event['end']:
                     yield {
                         'start_date': event['start']['dateTime'],
                         'end_date': event['end']['dateTime'],
