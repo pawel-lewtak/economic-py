@@ -92,8 +92,6 @@ class Economic(object):
         Converts JIRA task by adding default activity and description
         """
         task['activity_id'] = self.config['default_activity_id']
-        if self.config['default_description']:
-            task['task_description'] += ' - ' + self.config['default_description']
         task['task_description'] = task['task_description'].decode().encode('utf-8')
 
         return task

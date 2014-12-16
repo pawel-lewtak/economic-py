@@ -18,8 +18,6 @@ username=
 password=
 ; Default project. Will be used for Google Calendar events
 default_project_id=
-; Default description. Will be used for all JIRA tasks
-default_description=
 ; Default activity. Will be used for all JIRA tasks
 default_activity_id=
 
