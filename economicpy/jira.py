@@ -76,6 +76,8 @@ class Jira(object):
                 else:
                     project_id = str(fields[field])
 
-                return int(re.search(r'^\d+', project_id).group())
+                search = re.search(r'^\d+', project_id)
+                if search:
+                    return int(search.group())
 
         return False
