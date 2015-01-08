@@ -30,7 +30,7 @@ class Economic(object):
         self.init_medarbid()
         self.init_tasks()
 
-    def add_time_entry(self, entry):
+    def add_time_entry(self, entry, dry_run=False):
         """
         Method used to save given dict entry as Economic entry.
         Result is based on html response.
@@ -40,6 +40,10 @@ class Economic(object):
         if entry['task_description'][:20] in self.tasks_html:
             print("SKIPPED - %s" % (entry['task_description']))
             return False
+
+        if dry_run:
+            print("OK - time entry will be added: %s" % (entry['task_description']))
+            return True
 
         url = "https://secure.e-conomic.com/secure/applet/df_doform.asp?form=80&medarbid={MEDARBID}&theaction=post"
         url = url.replace('{MEDARBID}', self.medarbid)
