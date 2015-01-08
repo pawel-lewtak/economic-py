@@ -61,6 +61,9 @@ class Calendar(object):
                         if 'dateTime' not in event['start'] or 'dateTime' not in event['end']:
                             print("SKIPPED (event without specific hours of start/end) - %s" % (event['summary']))
                             break
+                        if event['start']['dateTime'][:10] != event['end']['dateTime'][:10]:
+                            print("SKIPPED (event start and end days are different) - %s" % (event['summary']))
+                            break
                         if event['summary'] not in self.ignore_events:
                             yield {
                                 'start_date': event['start']['dateTime'],
