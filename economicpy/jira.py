@@ -32,18 +32,19 @@ class Jira(object):
             return
 
         for issue in tasks['issues']:
-            if self.config['economic_field'] not in issue['fields']:
+            project_id = self.get_project_id(issue['fields'])
+            if not project_id:
                 print('ERROR - task %s is missing economic project ID' % (issue['key']))
-                yield None
-            else:
-                task = {
-                    'date': datetime.datetime.now().isoformat()[:10],
-                    'project_id': self.get_project_id(issue['fields'][self.config['economic_field']]),
-                    'task_description': '%s %s' % (issue['key'], issue['fields']['summary']),
-                    'time_spent': str(self.get_hours(issue['key'])).replace('.', ',')
-                }
+                continue
 
-                yield task
+            task = {
+                'date': datetime.datetime.now().isoformat()[:10],
+                'project_id': project_id,
+                'task_description': '%s %s' % (issue['key'], issue['fields']['summary']),
+                'time_spent': str(self.get_hours(issue['key'])).replace('.', ',')
+            }
+
+            yield task
 
     def get_hours(self, issue):
         hours = 0.0
@@ -60,17 +61,21 @@ class Jira(object):
     def get_worklog(self, issue_id):
         return self.make_request('issue/%s/worklog' % issue_id)['worklogs']
 
-    def get_project_id(self, economic_field):
+    def get_project_id(self, fields):
         """
         Economic field might be either select box or input field.
         Value might be either numeric or contain number and project's name.
 
-        :param economic_field:
+        :param fields:
         :return: :rtype:
         """
-        if type(economic_field) is dict:
-            project_id = str(economic_field['value'])
-        else:
-            project_id = str(economic_field)
+        for field in self.config['economic_field'].split(','):
+            if field in fields:
+                if type(fields[field]) is dict:
+                    project_id = str(fields[field]['value'])
+                else:
+                    project_id = str(fields[field])
 
-        return int(re.search(r'^\d+', project_id).group())
+                return int(re.search(r'^\d+', project_id).group())
+
+        return False

@@ -1,7 +1,7 @@
 [Jira]
 username=
 password=
-; Name of field in API that holds Economic project ID
+; Comma separated names of of fields in API that should be searched for Economic project ID
 economic_field=
 ; Feel free to improve search query to match your needs.
 search_query=assignee=currentUser() and status in ("In Progress") and Sprint in openSprints()
