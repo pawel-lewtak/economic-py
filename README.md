@@ -32,4 +32,3 @@ in crontab to make sure all tasks will be registered:
 # Known limitations
 * adding JIRA tasks for day other than current is not supported (might be tricky),
 * adding Google Calendar events for day other than today is not supported (easy to implement) 
-* time reported in JIRA is not exported to economic yet
