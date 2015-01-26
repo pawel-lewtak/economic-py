@@ -1,5 +1,6 @@
 import gflags
 import httplib2
+import re
 
 from apiclient.discovery import build
 from oauth2client.file import Storage
@@ -8,15 +9,19 @@ from oauth2client.tools import run
 
 
 class Calendar(object):
-    def __init__(self, client_id, client_secret, ignore_events, src_path):
+    def __init__(self, config, src_path):
+        self.config = {}
+        for key, value in config:
+            self.config[key] = value
+        # print config[0]
         self.user_agent = 'economic-py/0.3'
-        self.ignore_events = ignore_events
+        self.ignore_events = self.config['ignore_events']
         FLAGS = gflags.FLAGS
 
         # The client_id and client_secret can be found in Google Developers Console
         flow = OAuth2WebServerFlow(
-            client_id=client_id,
-            client_secret=client_secret,
+            client_id=self.config['client_id'],
+            client_secret=self.config['client_secret'],
             scope='https://www.googleapis.com/auth/calendar',
             user_agent=self.user_agent)
 
@@ -68,7 +73,9 @@ class Calendar(object):
                             yield {
                                 'start_date': event['start']['dateTime'],
                                 'end_date': event['end']['dateTime'],
-                                'title': event['summary'].encode('utf8')
+                                'title': event['summary'].encode('utf8'),
+                                'project_id': self.get_project_id(event['description']),
+                                'activity_id': self.get_activity_id(event['description'])
                             }
                         break
                 else:
@@ -76,3 +83,23 @@ class Calendar(object):
             page_token = events.get('nextPageToken')
             if not page_token:
                 break
+
+    def get_project_id(self, description):
+        if not self.config.get('project_id_pattern'):
+            return -1
+
+        result = re.search(self.config.get('project_id_pattern'), description)
+        if result:
+            return int(result.groups()[0])
+
+        return False
+
+    def get_activity_id(self, description):
+        if not self.config.get('activity_id_pattern'):
+            return -1
+
+        result = re.search(self.config.get('activity_id_pattern'), description)
+        if result:
+            return int(result.groups()[0])
+
+        return False

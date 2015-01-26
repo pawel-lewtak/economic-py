@@ -28,3 +28,5 @@ client_secret=
 client_id=
 ;List of event names to ignore.
 ignore_events=[]
+project_id_pattern=#economic[^0-9]+([0-9]+)
+activity_id_pattern=#activity[^0-9]+([0-9]+)
