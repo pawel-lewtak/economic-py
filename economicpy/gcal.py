@@ -74,8 +74,8 @@ class Calendar(object):
                                 'start_date': event['start']['dateTime'],
                                 'end_date': event['end']['dateTime'],
                                 'title': event['summary'].encode('utf8'),
-                                'project_id': self.get_project_id(event['description']),
-                                'activity_id': self.get_activity_id(event['description'])
+                                'project_id': self.get_project_id(event.get('description', '')),
+                                'activity_id': self.get_activity_id(event.get('description', ''))
                             }
                         break
                 else:
