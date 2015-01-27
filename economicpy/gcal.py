@@ -13,10 +13,8 @@ class Calendar(object):
         self.config = {}
         for key, value in config:
             self.config[key] = value
-        # print config[0]
         self.user_agent = 'economic-py/0.3'
         self.ignore_events = self.config['ignore_events'].lower().split(',')
-        FLAGS = gflags.FLAGS
 
         # The client_id and client_secret can be found in Google Developers Console
         flow = OAuth2WebServerFlow(
@@ -26,6 +24,7 @@ class Calendar(object):
             user_agent=self.user_agent)
 
         # To disable the local server feature, uncomment the following line:
+        # FLAGS = gflags.FLAGS
         # FLAGS.auth_local_webserver = False
 
         # If the Credentials don't exist or are invalid, run through the native client
@@ -33,7 +32,7 @@ class Calendar(object):
         # Credentials will get written back to a file.
         storage = Storage(src_path + '/calendar.dat')
         credentials = storage.get()
-        if credentials is None or credentials.invalid == True:
+        if credentials is None or credentials.invalid is True:
             credentials = run(flow, storage)
 
         # Create an httplib2.Http object to handle our HTTP requests and authorize it
@@ -91,6 +90,10 @@ class Calendar(object):
                 break
 
     def get_project_id(self, description):
+        """
+        Get e-conomic project ID from event description.
+        Regexp pattern "project_id_pattern" from configuration is being used here.
+        """
         if not self.config.get('project_id_pattern'):
             return -1
 
@@ -101,6 +104,10 @@ class Calendar(object):
         return False
 
     def get_activity_id(self, description):
+        """
+        Get e-conomic activity ID from event description.
+        Regexp pattern "project_id_pattern" from configuration is being used here.
+        """
         if not self.config.get('activity_id_pattern'):
             return -1
 

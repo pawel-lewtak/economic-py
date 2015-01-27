@@ -14,11 +14,11 @@ from economicpy.economic import Economic
 def run(dry_run):
     try:
         src_path = os.path.abspath(os.path.dirname(__file__))
-        configFile = os.path.join(src_path, 'config.ini')
-        if not os.path.isfile(configFile):
+        config_file = os.path.join(src_path, 'config.ini')
+        if not os.path.isfile(config_file):
             raise Exception('Configuration file config.ini not found.')
         config = ConfigParser.ConfigParser()
-        config.read(configFile)
+        config.read(config_file)
 
         economic = Economic(config.items('Economic'))
 
