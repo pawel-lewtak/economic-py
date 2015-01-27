@@ -15,7 +15,7 @@ class Calendar(object):
             self.config[key] = value
         # print config[0]
         self.user_agent = 'economic-py/0.3'
-        self.ignore_events = self.config['ignore_events']
+        self.ignore_events = self.config['ignore_events'].lower().split(',')
         FLAGS = gflags.FLAGS
 
         # The client_id and client_secret can be found in Google Developers Console
@@ -69,7 +69,11 @@ class Calendar(object):
                         if event['start']['dateTime'][:10] != event['end']['dateTime'][:10]:
                             print("SKIPPED (event start and end days are different) - %s" % (event['summary']))
                             break
-                        if event['summary'] not in self.ignore_events:
+                        ignore = False
+                        for ignore_event in self.ignore_events:
+                            if ignore_event in event['summary'].lower():
+                                ignore = True
+                        if not ignore:
                             yield {
                                 'start_date': event['start']['dateTime'],
                                 'end_date': event['end']['dateTime'],
@@ -77,6 +81,8 @@ class Calendar(object):
                                 'project_id': self.get_project_id(event.get('description', '')),
                                 'activity_id': self.get_activity_id(event.get('description', ''))
                             }
+                        else:
+                            print('SKIPPED (contains ignored phrase) - %s' % event['summary'])
                         break
                 else:
                     print("SKIPPED (not attending)- %s" % (event['summary']))
