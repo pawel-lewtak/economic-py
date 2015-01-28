@@ -4,9 +4,11 @@ import ConfigParser
 import datetime
 import os
 import click
+import sys
 from economicpy.gcal import Calendar
 from economicpy.jira import Jira
 from economicpy.economic import Economic
+from economicpy.configcheck import ConfigCheck
 
 
 @click.command()
@@ -15,8 +17,9 @@ def run(dry_run):
     try:
         src_path = os.path.abspath(os.path.dirname(__file__))
         config_file = os.path.join(src_path, 'config.ini')
-        if not os.path.isfile(config_file):
-            raise Exception('Configuration file config.ini not found.')
+        config_check = ConfigCheck(config_file + '.dist', config_file)
+        if not config_check.check_sections(['Google', 'Economic', 'Jira']):
+            sys.exit(0)
         config = ConfigParser.ConfigParser()
         config.read(config_file)
 
