@@ -83,7 +83,7 @@ class Economic(object):
 
         entry = {
             'date': str(start_date.isoformat()[:-9]),
-            'project_id': event.get('project_id') or self.config['default_project_id'],
+            'project_id': event.get('project_id'),
             'activity_id': event.get('activity_id') or str(activity_id),
             'task_description': event['title'],
             'time_spent': str(time_spent).replace('.', ',')

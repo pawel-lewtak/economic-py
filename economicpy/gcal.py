@@ -101,7 +101,7 @@ class Calendar(object):
         if result:
             return int(result.groups()[0])
 
-        return False
+        return self.config.get('default_project_id', False)
 
     def get_activity_id(self, description):
         """

@@ -31,5 +31,7 @@ ignore_events=
 ;Project and activity ID patterns; will be used to search for these in description
 project_id_pattern=#economic[^0-9]+([0-9]+)
 activity_id_pattern=#activity[^0-9]+([0-9]+)
-;Default activity_id to be used when none is found in description using patterns above.
+;Default project id to be used when none is found in description using patterns above.
+default_project_id=
+;Default activity id to be used when none is found in description using patterns above.
 default_activity_id=
