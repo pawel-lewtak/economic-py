@@ -83,7 +83,7 @@ class Economic(object):
 
         entry = {
             'date': str(start_date.isoformat()[:-9]),
-            'project_id': event.get('project_id'),
+            'project_id': event.get('project_id', False) or self.config['default_project_id'],
             'activity_id': event.get('activity_id') or str(activity_id),
             'task_description': event['title'],
             'time_spent': str(time_spent).replace('.', ',')
@@ -95,7 +95,6 @@ class Economic(object):
         """
         Converts JIRA task by adding default activity and description
         """
-        task['activity_id'] = self.config['default_activity_id']
         task['task_description'] = task['task_description'].decode().encode('utf-8')
 
         return task

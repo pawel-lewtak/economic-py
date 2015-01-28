@@ -10,16 +10,16 @@ api_url=
 ; Whether to use work reported in JIRA or not when saving task in economic.
 ; This works only for inserts - no update possible at the moment.
 use_worklog=0
+; Default activity. Will be used for all JIRA tasks.
+default_activity_id=
 
 [Economic]
 ; Agreement number, should be same for all employees
 agreement=
 username=
 password=
-; Default project. Will be used for Google Calendar events
+; Default project. Will be used when project ID is not found in JIRA or Google Calendar.
 default_project_id=
-; Default activity. Will be used for all JIRA tasks
-default_activity_id=
 
 [Google]
 ;Credentials to fill in below can be obtained from Google Developer Console:
@@ -31,7 +31,5 @@ ignore_events=
 ;Project and activity ID patterns; will be used to search for these in description
 project_id_pattern=#economic[^0-9]+([0-9]+)
 activity_id_pattern=#activity[^0-9]+([0-9]+)
-;Default project id to be used when none is found in description using patterns above.
-default_project_id=
 ;Default activity id to be used when none is found in description using patterns above.
 default_activity_id=

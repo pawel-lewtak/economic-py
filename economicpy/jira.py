@@ -40,6 +40,7 @@ class Jira(object):
             task = {
                 'date': datetime.datetime.now().isoformat()[:10],
                 'project_id': project_id,
+                'activity_id': self.get_activity_id(),
                 'task_description': '%s %s' % (issue['key'], issue['fields']['summary']),
                 'time_spent': str(self.get_hours(issue['key'])).replace('.', ',')
             }
@@ -81,3 +82,6 @@ class Jira(object):
                     return int(search.group())
 
         return False
+
+    def get_activity_id(self):
+        return self.config.get('default_activity_id', False)
