@@ -107,6 +107,9 @@ class Calendar(object):
         """
         Get e-conomic activity ID from event description.
         Regexp pattern "project_id_pattern" from configuration is being used here.
+
+        Default activity ID specified in configuration will be returned
+        if pattern search will not return any results.
         """
         if not self.config.get('activity_id_pattern'):
             return -1
@@ -115,4 +118,4 @@ class Calendar(object):
         if result:
             return int(result.groups()[0])
 
-        return False
+        return self.config.get('default_activity_id', False)
