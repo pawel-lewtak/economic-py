@@ -2,6 +2,7 @@ from __future__ import print_function
 import requests
 import re
 from datetime import datetime
+from bs4 import BeautifulSoup
 
 
 class Economic(object):
@@ -9,7 +10,7 @@ class Economic(object):
         self.session = requests.session()
         self.tasks_html = ""
         self.medarbid = ""
-
+        self.activities = {}
         self.config = {}
         for item in config:
             self.config[item[0]] = item[1]
@@ -30,6 +31,19 @@ class Economic(object):
         self.init_medarbid()
         self.init_tasks()
 
+    def init_activities(self):
+        """
+        Get list of available activities from e-conomic and cache it for future use.
+        """
+        url = "https://secure.e-conomic.com/secure/applet/fbsearch/fbsearch.asp?kar=10&id=%s&maxResultLength=1000"
+        response = self.session.get(url % self.config['default_project_id'])
+        soup = BeautifulSoup(response.content)
+        table = soup.find("table")
+
+        for row in table.find_all("tr", attrs={"class": "row"}):
+            data = [td.get_text() for td in row.find_all("td")]
+            self.activities[int(data[0])] = data[1]
+
     def add_time_entry(self, entry, dry_run=False):
         """
         Method used to save given dict entry as Economic entry.
@@ -44,6 +58,9 @@ class Economic(object):
         if dry_run:
             print("OK - time entry will be added: %s" % (entry['task_description']))
             return True
+
+        if not self.activities:
+            self.init_activities()
 
         url = "https://secure.e-conomic.com/secure/applet/df_doform.asp?form=80&medarbid={MEDARBID}&theaction=post"
         url = url.replace('{MEDARBID}', self.medarbid)
