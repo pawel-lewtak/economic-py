@@ -1,4 +1,3 @@
-import gflags
 import httplib2
 import re
 
@@ -24,6 +23,7 @@ class Calendar(object):
             user_agent=self.user_agent)
 
         # To disable the local server feature, uncomment the following line:
+        # import gflags
         # FLAGS = gflags.FLAGS
         # FLAGS.auth_local_webserver = False
 

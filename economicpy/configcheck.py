@@ -2,7 +2,7 @@ import ConfigParser
 import os
 
 
-class ConfigCheck:
+class ConfigCheck(object):
     """
     Check if configuration file is up to date and contains all options
     mentioned in example configuration file.
@@ -24,11 +24,11 @@ class ConfigCheck:
 
     def check_sections(self, sections):
         """
-            Checks whether number of config options is same in both files.
+        Checks whether number of config options is same in both files.
 
-            :param sections: list of section names to check in both files.
-            :return: boolean
-            """
+        :param sections: list of section names to check in both files.
+        :return: boolean
+        """
         dist = ConfigParser.ConfigParser()
         dist.read(self.config_dist)
         ini = ConfigParser.ConfigParser()
