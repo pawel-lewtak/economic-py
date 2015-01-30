@@ -2,7 +2,7 @@ import ConfigParser
 import os
 
 
-class ConfigCheck:
+class ConfigCheck(object):
     """
     Check if configuration file is up to date and contains all options
     mentioned in example configuration file.
