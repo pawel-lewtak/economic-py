@@ -106,14 +106,10 @@ class Economic(object):
 
         time_spent = (end_date - start_date).total_seconds() / 3600
 
-        activity_id = 4
-        if event['title'] == 'Project meeting - Scrum meeting':
-            activity_id = 2
-
         entry = {
             'date': str(start_date.isoformat()[:-9]),
             'project_id': event.get('project_id', False) or self.config['default_project_id'],
-            'activity_id': event.get('activity_id') or str(activity_id),
+            'activity_id': event.get('activity_id'),
             'task_description': event['title'],
             'time_spent': str(time_spent).replace('.', ',')
         }
