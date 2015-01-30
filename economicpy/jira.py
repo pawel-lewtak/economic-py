@@ -49,8 +49,6 @@ class Jira(object):
 
     def get_hours(self, issue):
         hours = 0.0
-        if not int(self.config['use_worklog']):
-            return hours
 
         now = str(datetime.datetime.now())[:10]
         for worklog in self.get_worklog(issue):

@@ -7,9 +7,6 @@ economic_field=
 search_query=assignee=currentUser() and status in ("In Progress") and Sprint in openSprints()
 ; API endpoint, eg. https://jira.example.com/rest/api/2/
 api_url=
-; Whether to use work reported in JIRA or not when saving task in economic.
-; This works only for inserts - no update possible at the moment.
-use_worklog=0
 ; Default activity. Will be used for all JIRA tasks.
 default_activity_id=
 
