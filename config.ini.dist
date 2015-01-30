@@ -17,6 +17,8 @@ username=
 password=
 ; Default project. Will be used when project ID is not found in JIRA or Google Calendar.
 default_project_id=
+;Comma separated list of activity ID for which event title should appended to description
+append_title_for_activities=
 
 [Google]
 ;Credentials to fill in below can be obtained from Google Developer Console:

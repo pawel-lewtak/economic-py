@@ -69,9 +69,6 @@ class Economic(object):
             print("OK - time entry will be added: %s" % (entry['task_description']))
             return True
 
-        if not self.activities:
-            self.init_activities()
-
         url = "https://secure.e-conomic.com/secure/applet/df_doform.asp?form=80&medarbid={MEDARBID}&theaction=post"
         url = url.replace('{MEDARBID}', self.medarbid)
         response = self.session.post(url,
@@ -98,6 +95,9 @@ class Economic(object):
         :type event: dict
         :param event:
         """
+        if not self.activities:
+            self.init_activities()
+
         try:
             start_date = datetime.strptime(event['start_date'][:19], "%Y-%m-%dT%H:%M:%S")
             end_date = datetime.strptime(event['end_date'][:19], "%Y-%m-%dT%H:%M:%S")
@@ -110,7 +110,7 @@ class Economic(object):
             'date': str(start_date.isoformat()[:-9]),
             'project_id': event.get('project_id', False) or self.config['default_project_id'],
             'activity_id': event.get('activity_id'),
-            'task_description': event['title'],
+            'task_description': self.get_description(event['title'], event.get('activity_id')),
             'time_spent': str(time_spent).replace('.', ',')
         }
 
@@ -155,3 +155,27 @@ class Economic(object):
             self.medarbid = medarbid.groups()[0]
         else:
             raise RuntimeError('There is problem when trying to determine economic internal user id.')
+
+    def get_description(self, title, activity_id):
+        """
+        For defined activity IDs title should be concatenation of default
+        activity description and calendar event title. As fallback
+        just default activity description is returned.
+
+        :param title:
+        :param activity_id:
+        :type title: str
+        :type activity_id: int
+        :return str
+        """
+        activity_ids = map(int, self.config.get('append_title_for_activities').split(','))
+        default_activity = self.activities.get(int(activity_id), False)
+
+        if default_activity is False:
+            message = 'ERROR - No activity found with ID = %s' % str(activity_id)
+            raise Exception(message)
+
+        if int(activity_id) in activity_ids:
+            return "%s - %s" % (default_activity, title)
+
+        return default_activity
