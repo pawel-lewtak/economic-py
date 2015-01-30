@@ -27,7 +27,7 @@ class ConfigCheck(object):
         Checks whether number of config options is same in both files.
 
         :param sections: list of section names to check in both files.
-        :return: boolean
+        :return boolean
         """
         dist = ConfigParser.ConfigParser()
         dist.read(self.config_dist)

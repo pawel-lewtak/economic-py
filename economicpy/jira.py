@@ -15,6 +15,8 @@ class Jira(object):
     def make_request(self, uri):
         """
         Generic method for making requests to JIRA API.
+        :type uri: str
+        :param uri:
         """
         response = requests.get(self.config['api_url'] + uri, auth=self.auth_data)
         response.raise_for_status()
@@ -48,6 +50,13 @@ class Jira(object):
             yield task
 
     def get_hours(self, issue):
+        """
+        Get sum of hours registered in JIRA worklog or return 0 (zero)
+        if worklog is not used.
+
+        :param issue:
+        :return float
+        """
         hours = 0.0
 
         now = str(datetime.datetime.now())[:10]
@@ -58,6 +67,13 @@ class Jira(object):
         return hours / 3600
 
     def get_worklog(self, issue_id):
+        """
+        Make separate API call for given issue's worklog and return it.
+
+        :param issue_id:
+        :type issue_id: int
+        :return list
+        """
         return self.make_request('issue/%s/worklog' % issue_id)['worklogs']
 
     def get_project_id(self, fields):
@@ -66,7 +82,8 @@ class Jira(object):
         Value might be either numeric or contain number and project's name.
 
         :param fields:
-        :return: :rtype:
+        :type fields: list
+        :return bool|int
         """
         for field in self.config['economic_field'].split(','):
             if field in fields:
@@ -82,4 +99,9 @@ class Jira(object):
         return False
 
     def get_activity_id(self):
+        """
+        Return activity ID.
+
+        :return bool|int
+        """
         return self.config.get('default_activity_id', False)

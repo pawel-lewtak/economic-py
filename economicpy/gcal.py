@@ -9,6 +9,10 @@ from oauth2client.tools import run
 
 class Calendar(object):
     def __init__(self, config, src_path):
+        """
+        :type src_path: str
+        :type config: list of tuples
+        """
         self.config = {}
         for key, value in config:
             self.config[key] = value
@@ -46,9 +50,31 @@ class Calendar(object):
         self.service = build(serviceName='calendar', version='v3', http=http,
                              developerKey='notsosecret')
 
+    def ignore_event(self, event):
+        """
+        Based on configuration return info whether event should be ignored.
+        If task summary contains one of ignored phrases then whole event
+        will be ignored.
+
+        :param event:
+        :type event: dict
+        :return bool
+        """
+        ignore = False
+        for ignore_event in self.ignore_events:
+            if ignore_event in event['summary'].lower():
+                ignore = True
+
+        return ignore
+
     def get_events(self, start_date, end_date):
         """
         Get events from calendar between given dates.
+
+        :param start_date: date in format YYYY-MM-DDTHH:MM:SSZ
+        :param end_date:
+        :type end_date: str
+        :type start_date: str
         """
         page_token = None
 
@@ -68,11 +94,7 @@ class Calendar(object):
                         if event['start']['dateTime'][:10] != event['end']['dateTime'][:10]:
                             print("SKIPPED (event start and end days are different) - %s" % (event['summary']))
                             break
-                        ignore = False
-                        for ignore_event in self.ignore_events:
-                            if ignore_event in event['summary'].lower():
-                                ignore = True
-                        if not ignore:
+                        if not self.ignore_event(event):
                             yield {
                                 'start_date': event['start']['dateTime'],
                                 'end_date': event['end']['dateTime'],
@@ -93,6 +115,8 @@ class Calendar(object):
         """
         Get e-conomic project ID from event description.
         Regexp pattern "project_id_pattern" from configuration is being used here.
+        :type description: str
+        :param description: description of meeting
         """
         if not self.config.get('project_id_pattern'):
             return -1
@@ -110,6 +134,8 @@ class Calendar(object):
 
         Default activity ID specified in configuration will be returned
         if pattern search will not return any results.
+        :type description: str
+        :param description: description of meeting
         """
         if not self.config.get('activity_id_pattern'):
             return -1

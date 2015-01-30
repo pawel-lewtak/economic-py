@@ -18,6 +18,12 @@ class Economic(object):
         self.login()
 
     def login(self):
+        """
+        Login to e-conomic service, parse page looking for internal user ID
+        and fetch already registered tasks.
+
+        :raise Exception: raised in case of invalid credentials
+        """
         response = self.session.post('https://secure.e-conomic.com/secure/internal/login.asp',
                                      {
                                          'aftalenr': self.config['agreement'],
@@ -49,7 +55,11 @@ class Economic(object):
         Method used to save given dict entry as Economic entry.
         Result is based on html response.
 
-        @return boolean
+        :param entry: dictionary with data to be added
+        :param dry_run: whether to really insert data or just simulate it
+        :type entry: dict
+        :type dry_run: bool
+        :return bool
         """
         if entry['task_description'][:20] in self.tasks_html:
             print("SKIPPED - %s" % (entry['task_description']))
@@ -85,6 +95,8 @@ class Economic(object):
     def convert_calendar_event_to_entry(self, event):
         """
         Converts Google Calendar event object to a dict object that will later be inserted to Economic.
+        :type event: dict
+        :param event:
         """
         try:
             start_date = datetime.strptime(event['start_date'][:19], "%Y-%m-%dT%H:%M:%S")
@@ -111,6 +123,9 @@ class Economic(object):
     def convert_jira_task_to_entry(self, task):
         """
         Converts JIRA task by adding default activity and description
+        :param task:
+        :type task: dict
+        :return dict
         """
         task['task_description'] = task['task_description'].decode().encode('utf-8')
 
