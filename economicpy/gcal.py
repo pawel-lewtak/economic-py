@@ -121,7 +121,7 @@ class Calendar(object):
         if not self.config.get('project_id_pattern'):
             return -1
 
-        result = re.search(self.config.get('project_id_pattern'), description)
+        result = re.search(self.config.get('project_id_pattern'), description.lower())
         if result:
             return int(result.groups()[0])
 
@@ -140,7 +140,7 @@ class Calendar(object):
         if not self.config.get('activity_id_pattern'):
             return -1
 
-        result = re.search(self.config.get('activity_id_pattern'), description)
+        result = re.search(self.config.get('activity_id_pattern'), description.lower())
         if result:
             return int(result.groups()[0])
 
