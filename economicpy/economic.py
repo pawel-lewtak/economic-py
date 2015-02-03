@@ -61,6 +61,7 @@ class Economic(object):
         :type dry_run: bool
         :return bool
         """
+        entry['task_description'] = entry['task_description'].decode().encode('utf-8')
         if entry['task_description'][:20] in self.tasks_html:
             print("SKIPPED - %s" % (entry['task_description']))
             return False
@@ -110,7 +111,7 @@ class Economic(object):
             'date': str(start_date.isoformat()[:-9]),
             'project_id': event.get('project_id', False) or self.config['default_project_id'],
             'activity_id': event.get('activity_id'),
-            'task_description': self.get_description(event['title'], event.get('activity_id')).decode().encode('utf-8'),
+            'task_description': self.get_description(event['title'], event.get('activity_id')),
             'time_spent': str(time_spent).replace('.', ',')
         }
 
