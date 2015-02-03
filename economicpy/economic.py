@@ -110,22 +110,11 @@ class Economic(object):
             'date': str(start_date.isoformat()[:-9]),
             'project_id': event.get('project_id', False) or self.config['default_project_id'],
             'activity_id': event.get('activity_id'),
-            'task_description': self.get_description(event['title'], event.get('activity_id')),
+            'task_description': self.get_description(event['title'], event.get('activity_id')).decode().encode('utf-8'),
             'time_spent': str(time_spent).replace('.', ',')
         }
 
         return entry
-
-    def convert_jira_task_to_entry(self, task):
-        """
-        Converts JIRA task by adding default activity and description
-        :param task:
-        :type task: dict
-        :return dict
-        """
-        task['task_description'] = task['task_description'].decode().encode('utf-8')
-
-        return task
 
     def init_tasks(self):
         """

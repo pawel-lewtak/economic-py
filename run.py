@@ -42,7 +42,6 @@ def run(dry_run):
             jira = Jira(config.items('Jira'))
             for task in jira.get_tasks():
                 if task:
-                    task = economic.convert_jira_task_to_entry(task)
                     economic.add_time_entry(task, dry_run)
         except Exception as e:
             print(e.message)
