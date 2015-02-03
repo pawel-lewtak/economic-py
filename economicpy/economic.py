@@ -157,7 +157,10 @@ class Economic(object):
         :type activity_id: int
         :return str
         """
-        activity_ids = map(int, self.config.get('append_title_for_activities').split(','))
+        activity_ids = []
+        if self.config.get('append_title_for_activities'):
+            activity_ids = map(int, self.config.get('append_title_for_activities').split(','))
+
         default_activity = self.activities.get(int(activity_id), False)
 
         if default_activity is False:
