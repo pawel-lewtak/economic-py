@@ -1,6 +1,6 @@
 economic-py
 ===========
-[![Build status](https://travis-ci.org/pawel-lewtak/economic-py.png)](https://travis-ci.org/pawel-lewtak/economic-py) [![Code Health](https://landscape.io/github/pawel-lewtak/economic-py/master/landscape.svg)](https://landscape.io/github/pawel-lewtak/economic-py/master)[![Requirements Status](https://requires.io/github/pawel-lewtak/economic-py/requirements.svg?branch=master)](https://requires.io/github/pawel-lewtak/economic-py/requirements/?branch=master) 
+[![Build status](https://travis-ci.org/pawel-lewtak/economic-py.png)](https://travis-ci.org/pawel-lewtak/economic-py) [![Code Health](https://landscape.io/github/pawel-lewtak/economic-py/master/landscape.svg)](https://landscape.io/github/pawel-lewtak/economic-py/master) [![Requirements Status](https://requires.io/github/pawel-lewtak/economic-py/requirements.svg?branch=master)](https://requires.io/github/pawel-lewtak/economic-py/requirements/?branch=master) 
 
 # About
 These few files were created to help automatically pre fill Economic.
