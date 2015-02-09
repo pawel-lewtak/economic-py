@@ -6,12 +6,13 @@ from bs4 import BeautifulSoup
 
 
 class Economic(object):
-    def __init__(self, config):
+    def __init__(self, config, date):
         self.session = requests.session()
         self.tasks_html = ""
         self.medarbid = ""
         self.activities = {}
         self.config = {}
+        self.date = date
         for item in config:
             self.config[item[0]] = item[1]
 
@@ -126,8 +127,7 @@ class Economic(object):
         """
         url = 'https://secure.e-conomic.com/Secure/generelt/dataedit.asp?' \
               'form=80&projektleder=&medarbid=' + self.medarbid + '&mode=dag&dato='
-        today = datetime.now()
-        date = "%s-%s-%s" % (today.day, today.month, today.year)
+        date = "%s-%s-%s" % (self.date.day, self.date.month, self.date.year)
         response = self.session.get(url + date)
         self.tasks_html = response.content
 
