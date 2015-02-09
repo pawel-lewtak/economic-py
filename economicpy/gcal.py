@@ -61,8 +61,9 @@ class Calendar(object):
         :return bool
         """
         ignore = False
+
         for ignore_event in self.ignore_events:
-            if ignore_event in event['summary'].lower():
+            if ignore_event and ignore_event in event['summary'].lower():
                 ignore = True
 
         return ignore
