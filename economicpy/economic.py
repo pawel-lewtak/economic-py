@@ -83,12 +83,14 @@ class Economic(object):
                                          'cs11': "False",
                                          'cs4': None
                                      })
-        if response.content.find("../generelt/dataedit.asp"):
-            print("OK - time entry added: %s" % (entry['task_description']))
-            return True
 
-        print("ERROR - time entry not added. Entry: %s; Response: %s" % (entry['task_description'], response.content))
-        return False
+        error_message = re.search(r'"errorMessage": "([^"]+)"', response.content)
+        if error_message:
+            print("ERROR - time entry not added - %s: %s" % (error_message.groups()[0], entry['task_description']))
+            return False
+        else:
+            print("OK - time entry added: %s" % entry['task_description'])
+            return True
 
     def convert_calendar_event_to_entry(self, event):
         """
