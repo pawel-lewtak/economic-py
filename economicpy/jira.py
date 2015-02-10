@@ -30,8 +30,6 @@ class Jira(object):
         tasks = self.make_request(
             'search?jql=' + self.config['search_query'] + '&fields=*all,-comment'
         )
-        if not tasks:
-            return
 
         for issue in tasks['issues']:
             project_id = self.get_project_id(issue['fields'])
@@ -82,7 +80,7 @@ class Jira(object):
         Value might be either numeric or contain number and project's name.
 
         :param fields:
-        :type fields: list
+        :type fields: dict
         :return bool|int
         """
         for field in self.config['economic_field'].split(','):
