@@ -16,7 +16,6 @@ setuptools.setup(
         "gdata==2.0.18",
         "requests==2.5.1",
         "click==3.3",
-        "beautifulsoup4==4.3.2",
         "responses==0.3.0"
     ],
 
