@@ -1,8 +1,8 @@
 from __future__ import print_function
 import requests
 import re
+import json
 from datetime import datetime
-from bs4 import BeautifulSoup
 
 
 class Economic(object):
@@ -44,12 +44,10 @@ class Economic(object):
         """
         url = "https://secure.e-conomic.com/secure/applet/fbsearch/fbsearch.asp?kar=10&id=%s&maxResultLength=1000"
         response = self.session.get(url % self.config['default_project_id'])
-        soup = BeautifulSoup(response.content)
-        table = soup.find("table")
+        activities = json.loads(response.content)
 
-        for row in table.find_all("tr", attrs={"class": "row"}):
-            data = [td.get_text() for td in row.find_all("td")]
-            self.activities[int(data[0])] = data[1]
+        for row in activities['collection']:
+            self.activities[int(row['0'])] = row['1']
 
     def add_time_entry(self, entry, dry_run=False):
         """
