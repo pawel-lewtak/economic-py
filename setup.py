@@ -14,7 +14,7 @@ setuptools.setup(
 
     install_requires=[
         "gdata==2.0.18",
-        "requests==2.5.1",
+        "requests==2.5.3",
         "click==3.3",
         "responses==0.3.0"
     ],
