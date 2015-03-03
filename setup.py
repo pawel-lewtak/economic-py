@@ -16,7 +16,8 @@ setuptools.setup(
         "gdata==2.0.18",
         "requests==2.5.3",
         "click==3.3",
-        "responses==0.3.0"
+        "responses==0.3.0",
+        "google-api-python-client==1.3.2"
     ],
 
     classifiers=[
