@@ -17,7 +17,7 @@ setuptools.setup(
         "requests==2.5.3",
         "click==3.3",
         "responses==0.3.0",
-        "google-api-python-client==1.3.2"
+        "google-api-python-client==1.4.0"
     ],
 
     classifiers=[
@@ -27,6 +27,6 @@ setuptools.setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2 :: Only'
+        'Programming Language :: Python :: 3',
     ],
 )
