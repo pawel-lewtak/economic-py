@@ -15,13 +15,9 @@ CONFIG = [
 
 # noinspection PyDocstring
 class TestJira(object):
-    def test_jira_init_fails_when_no_config_given(self):
-        with pytest.raises(TypeError):
-            jira = Jira()
-
     def test_jira_init_fails_with_empty_config(self):
         with pytest.raises(KeyError):
-            jira = Jira([])
+            Jira([])
 
     def test_jira_init_ok_with_proper_config(self):
         jira = Jira(CONFIG)
@@ -68,13 +64,13 @@ class TestJira(object):
         config = copy.copy(CONFIG)
         config.append(('economic_field', ''))
         jira = Jira(config)
-        assert (False == jira.get_project_id([]))
+        assert (False == jira.get_project_id({}))
 
     def test_project_id_not_in_defined_field(self):
         config = copy.copy(CONFIG)
         config.append(('economic_field', 'customfield'))
         jira = Jira(config)
-        assert (False == jira.get_project_id([]))
+        assert (False == jira.get_project_id({}))
 
     def test_project_id_as_dict(self):
         config = copy.copy(CONFIG)
@@ -131,7 +127,6 @@ class TestJira(object):
         config.append(('economic_field', 'customfield_economic'))
         config.append(('default_activity_id', '100'))
 
-
         url_re = re.compile(r'http://jira\.example\.com/search\?jql(.)+')
         responses.add(responses.GET, url_re,
                       body='{"startAt": 0,"maxResults": 50,"total": 0,"issues": []}',
@@ -160,7 +155,7 @@ class TestJira(object):
                       body='{"startAt":0,"maxResults":50,"total":1,"worklogs":[]}', status=200,
                       content_type='application/json')
         jira = Jira(config)
-        task = jira.get_tasks().next()
+        task = next(jira.get_tasks())
         assert ('100' == task['activity_id'])
         assert (datetime.datetime.now().isoformat()[:10] == task['date'])
         assert (200 == task['project_id'])
