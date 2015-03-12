@@ -45,8 +45,8 @@ class ConfigCheck(object):
             ini_items = ini.items(section)
             if len(dist_items) != len(ini_items):
                 print('Section [%s] in configuration file does not contain all required settings' % section)
-                ini_keys = [k for k, v in ini_items]
-                dist_keys = [k for k, v in dist_items]
+                ini_keys = [item[0] for item in ini_items]
+                dist_keys = [item[0] for item in dist_items]
                 missing_dist = list(set(dist_keys) - set(ini_keys))
                 missing_ini = list(set(ini_keys) - set(dist_keys))
                 if missing_dist:
