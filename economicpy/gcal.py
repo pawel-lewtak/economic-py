@@ -1,3 +1,4 @@
+from __future__ import print_function
 import httplib2
 import re
 
@@ -8,8 +9,18 @@ from oauth2client.tools import run
 
 
 class Calendar(object):
+
+    """
+    Class related to communication with Google Calendar using API V3.
+
+    :param config: list
+    :param src_path: str
+    """
+
     def __init__(self, config, src_path):
         """
+        Set configuration and init variables.
+
         :type src_path: str
         :type config: list of tuples
         """
@@ -53,6 +64,7 @@ class Calendar(object):
     def ignore_event(self, event):
         """
         Based on configuration return info whether event should be ignored.
+
         If task summary contains one of ignored phrases then whole event
         will be ignored.
 
@@ -115,6 +127,7 @@ class Calendar(object):
     def get_project_id(self, description):
         """
         Get e-conomic project ID from event description.
+
         Regexp pattern "project_id_pattern" from configuration is being used here.
         :type description: str
         :param description: description of meeting
@@ -131,10 +144,11 @@ class Calendar(object):
     def get_activity_id(self, description):
         """
         Get e-conomic activity ID from event description.
-        Regexp pattern "project_id_pattern" from configuration is being used here.
 
+        Regexp pattern "project_id_pattern" from configuration is being used here.
         Default activity ID specified in configuration will be returned
         if pattern search will not return any results.
+
         :type description: str
         :param description: description of meeting
         """

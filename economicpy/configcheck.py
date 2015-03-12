@@ -1,16 +1,23 @@
+from __future__ import print_function
 import ConfigParser
 import os
 
 
 class ConfigCheck(object):
+
     """
-    Check if configuration file is up to date and contains all options
-    mentioned in example configuration file.
+    Class used to validate configuration file against sample config.
+
+    It's role is to check whether all required options are set.
+
+    :param config_dist: str
+    :param config_ini: str
+    :raise Exception:
     """
 
     def __init__(self, config_dist, config_ini):
         """
-        Set path for dist and custom configuration files
+        Set path for dist and custom configuration files.
 
         :param config_dist: file path
         :param config_ini: file path
@@ -24,7 +31,7 @@ class ConfigCheck(object):
 
     def check_sections(self, sections):
         """
-        Checks whether number of config options is same in both files.
+        Check whether number of config options is same in both files.
 
         :param sections: list of section names to check in both files.
         :return boolean

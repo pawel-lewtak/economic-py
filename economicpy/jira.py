@@ -5,7 +5,19 @@ import datetime
 
 
 class Jira(object):
+
+    """
+    Class responsible for communication with JIRA.
+
+    :param config: list
+    """
+
     def __init__(self, config):
+        """
+        Save configuration options.
+
+        :param config: list
+        """
         self.config = {}
         for item in config:
             self.config[item[0]] = item[1]
@@ -15,6 +27,7 @@ class Jira(object):
     def make_request(self, uri):
         """
         Generic method for making requests to JIRA API.
+
         :type uri: str
         :param uri:
         """
@@ -24,9 +37,7 @@ class Jira(object):
         return response.json()
 
     def get_tasks(self):
-        """
-        Generator returning all tasks assigned to current user that match filter specified in configuration
-        """
+        """Generator returning all tasks assigned to current user that match filter specified in configuration."""
         tasks = self.make_request(
             'search?jql=' + self.config['search_query'] + '&fields=*all,-comment'
         )
@@ -49,8 +60,7 @@ class Jira(object):
 
     def get_hours(self, issue):
         """
-        Get sum of hours registered in JIRA worklog or return 0 (zero)
-        if worklog is not used.
+        Get sum of hours registered in JIRA worklog or return 0 (zero) if worklog is not used.
 
         :param issue:
         :return float
@@ -76,6 +86,8 @@ class Jira(object):
 
     def get_project_id(self, fields):
         """
+        Get numeric E-conomic ID from JIRA task.
+
         Economic field might be either select box or input field.
         Value might be either numeric or contain number and project's name.
 

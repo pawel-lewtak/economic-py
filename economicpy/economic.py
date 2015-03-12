@@ -6,7 +6,21 @@ from datetime import datetime
 
 
 class Economic(object):
+
+    """
+    Class related to communication with E-conomic service.
+
+    :param config: list
+    :param date: str
+    """
+
     def __init__(self, config, date):
+        """
+        Set configuration and login to E-conomic.
+
+        :param config: list
+        :param date: str
+        """
         self.session = requests.session()
         self.tasks_html = ""
         self.medarbid = ""
@@ -20,8 +34,9 @@ class Economic(object):
 
     def login(self):
         """
-        Login to e-conomic service, parse page looking for internal user ID
-        and fetch already registered tasks.
+        Login to e-conomic service.
+
+        After login parse page looking for internal user ID and already registered tasks.
 
         :raise Exception: raised in case of invalid credentials
         """
@@ -39,9 +54,7 @@ class Economic(object):
         self.init_tasks()
 
     def init_activities(self):
-        """
-        Get list of available activities from e-conomic and cache it for future use.
-        """
+        """Get list of available activities from e-conomic and cache it for future use."""
         url = "https://secure.e-conomic.com/secure/applet/fbsearch/fbsearch.asp?kar=10&id=%s&maxResultLength=1000"
         response = self.session.get(url % self.config['default_project_id'])
         activities = json.loads(response.content)
@@ -51,7 +64,8 @@ class Economic(object):
 
     def add_time_entry(self, entry, dry_run=False):
         """
-        Method used to save given dict entry as Economic entry.
+        Add given time entry to e-conomic.
+
         Result is based on html response.
 
         :param entry: dictionary with data to be added
@@ -93,7 +107,8 @@ class Economic(object):
 
     def convert_calendar_event_to_entry(self, event):
         """
-        Converts Google Calendar event object to a dict object that will later be inserted to Economic.
+        Convert Google Calendar event object to a dict object that will later be inserted to Economic.
+
         :type event: dict
         :param event:
         """
@@ -120,6 +135,8 @@ class Economic(object):
 
     def init_tasks(self):
         """
+        Set list of tasks already registered in e-conomic.
+
         This method fetches list of currently entered tasks and saves it as HTML (without parsing).
         It will be later used to avoid entering duplicated entries.
         """
@@ -131,6 +148,8 @@ class Economic(object):
 
     def init_medarbid(self):
         """
+        Set e-conomic internal user ID.
+
         In order to make Economic work we need user ID. Even though we pass User ID in login form,
         Economic is internally using another user ID called "medarbid" which indicates specific
         user within given agreement number.
@@ -148,6 +167,8 @@ class Economic(object):
 
     def get_description(self, title, activity_id):
         """
+        Return description for given activity.
+
         For defined activity IDs title should be concatenation of default
         activity description and calendar event title. As fallback
         just default activity description is returned.
