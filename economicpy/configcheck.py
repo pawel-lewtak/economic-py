@@ -29,6 +29,23 @@ class ConfigCheck(object):
         if not os.path.isfile(self.config_dist):
             raise Exception('Configuration file config.ini.dist not found.')
 
+    @staticmethod
+    def find_differences(dist_items, ini_items):
+        """
+        Find and return differences between two lists of settings.
+
+        :param dist_items: list of tuples
+        :param ini_items: list of tuples
+        """
+        ini_keys = [item[0] for item in ini_items]
+        dist_keys = [item[0] for item in dist_items]
+        missing_dist = list(set(dist_keys) - set(ini_keys))
+        missing_ini = list(set(ini_keys) - set(dist_keys))
+        if missing_dist:
+            print('Missing settings: %s' % ', '.join(missing_dist))
+        if missing_ini:
+            print('Not needed settings: %s' % ', '.join(missing_ini))
+
     def check_sections(self, sections):
         """
         Check whether number of config options is same in both files.
@@ -45,14 +62,8 @@ class ConfigCheck(object):
             ini_items = ini.items(section)
             if len(dist_items) != len(ini_items):
                 print('Section [%s] in configuration file does not contain all required settings' % section)
-                ini_keys = [item[0] for item in ini_items]
-                dist_keys = [item[0] for item in dist_items]
-                missing_dist = list(set(dist_keys) - set(ini_keys))
-                missing_ini = list(set(ini_keys) - set(dist_keys))
-                if missing_dist:
-                    print('Missing settings: %s' % ', '.join(missing_dist))
-                if missing_ini:
-                    print('Not needed settings: %s' % ', '.join(missing_ini))
+                self.find_differences(dist_items, ini_items)
+
                 return False
 
         return True
