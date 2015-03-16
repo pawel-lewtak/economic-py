@@ -9,7 +9,6 @@ from oauth2client.tools import run
 
 
 class Calendar(object):
-
     """
     Class related to communication with Google Calendar using API V3.
 
@@ -80,6 +79,98 @@ class Calendar(object):
 
         return ignore
 
+    @staticmethod
+    def verify_dates(event):
+        """
+        Verify start and end dates of event.
+
+        Event should have specific hours and same day of start and end.
+
+        :param event: dict
+        :return: bool
+        """
+        if 'dateTime' not in event['start'] or 'dateTime' not in event['end']:
+            print("SKIPPED (event without specific hours of start/end) - %s" % (event['summary']))
+            return False
+
+        if event['start']['dateTime'][:10] != event['end']['dateTime'][:10]:
+            print("SKIPPED (event start and end days are different) - %s" % (event['summary']))
+            return False
+
+        return True
+
+    @staticmethod
+    def get_events_with_attendees(events):
+        """
+        From given list of events filter out events without atendees.
+
+        :param events: list
+        :return: list
+        """
+        output = []
+        for event in events:
+            if 'attendees' in event:
+                output.append(event)
+            else:
+                print("SKIPPED (no attendees) - %s" % (event['summary']))
+
+        return output
+
+    @staticmethod
+    def get_accepted_events(events):
+        """
+        From given list of events filter out events that are not accepted by current user.
+
+        :param events: list
+        :return: list
+        """
+        output = []
+        for event in events:
+            for attendee in event['attendees']:
+                if 'self' in attendee:
+                    if attendee['responseStatus'] == 'accepted':
+                        output.append(event)
+                    else:
+                        print("SKIPPED (not attending) - %s" % (event['summary']))
+
+        return output
+
+    def get_events_with_proper_dates(self, events):
+        """
+        Filter out events with bad start/end date.
+
+        As bad start/end date is considered date without time
+        or or event spanning over many days.
+        :param events: list
+        :return: list
+        """
+        output = []
+        for event in events:
+            if self.verify_dates(event):
+                output.append(event)
+            else:
+                print("SKIPPED (dates issue) - %s" % (event['summary']))
+
+        return output
+
+    def skip_ignored_events(self, events):
+        """
+        From given list of events filter out events that are ignored.
+
+        Event is ignored if it contains any of phrases defined in configuration.
+
+        :param events: list
+        :return: list
+        """
+        output = []
+        for event in events:
+            if not self.ignore_event(event):
+                output.append(event)
+            else:
+                print('SKIPPED (contains ignored phrase) - %s' % event['summary'])
+
+        return output
+
     def get_events(self, start_date, end_date):
         """
         Get events from calendar between given dates.
@@ -92,35 +183,21 @@ class Calendar(object):
         page_token = None
 
         while True:
-            events = self.service.events().list(calendarId='primary', pageToken=page_token, singleEvents=True,
-                                                timeMin=start_date, timeMax=end_date).execute()
-            for event in events['items']:
-                if 'attendees' not in event:
-                    print("SKIPPED (no attendees) - %s" % (event['summary']))
-                    continue
-
-                for attendee in event['attendees']:
-                    if 'self' in attendee and attendee['responseStatus'] == 'accepted':
-                        if 'dateTime' not in event['start'] or 'dateTime' not in event['end']:
-                            print("SKIPPED (event without specific hours of start/end) - %s" % (event['summary']))
-                            break
-                        if event['start']['dateTime'][:10] != event['end']['dateTime'][:10]:
-                            print("SKIPPED (event start and end days are different) - %s" % (event['summary']))
-                            break
-                        if not self.ignore_event(event):
-                            yield {
-                                'start_date': event['start']['dateTime'],
-                                'end_date': event['end']['dateTime'],
-                                'title': event['summary'].encode('utf8'),
-                                'project_id': self.get_project_id(event.get('description', '')),
-                                'activity_id': self.get_activity_id(event.get('description', ''))
-                            }
-                        else:
-                            print('SKIPPED (contains ignored phrase) - %s' % event['summary'])
-                        break
-                else:
-                    print("SKIPPED (not attending)- %s" % (event['summary']))
-            page_token = events.get('nextPageToken')
+            original_events = self.service.events().list(calendarId='primary', pageToken=page_token, singleEvents=True,
+                                                         timeMin=start_date, timeMax=end_date).execute()
+            events = self.get_events_with_attendees(original_events['items'])
+            events = self.get_accepted_events(events)
+            events = self.skip_ignored_events(events)
+            events = self.get_events_with_proper_dates(events)
+            for event in events:
+                yield {
+                    'start_date': event['start']['dateTime'],
+                    'end_date': event['end']['dateTime'],
+                    'title': event['summary'].encode('utf8'),
+                    'project_id': self.get_project_id(event.get('description', '')),
+                    'activity_id': self.get_activity_id(event.get('description', ''))
+                }
+            page_token = original_events.get('nextPageToken')
             if not page_token:
                 break
 
