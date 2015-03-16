@@ -14,7 +14,7 @@ setuptools.setup(
 
     install_requires=[
         "gdata==2.0.18",
-        "requests==2.5.3",
+        "requests==2.6.0",
         "click==3.3",
         "responses==0.3.0",
         "google-api-python-client==1.4.0"
