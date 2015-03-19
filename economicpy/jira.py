@@ -97,16 +97,30 @@ class Jira(object):
         """
         for field in self.config['economic_field'].split(','):
             if field in fields:
-                if type(fields[field]) is dict:
-                    project_id = str(fields[field]['value'])
-                else:
-                    project_id = str(fields[field])
-
-                search = re.search(r'^\d+', project_id)
-                if search:
-                    return int(search.group())
+                project_id = self.extract_project_id(fields[field])
+                if project_id:
+                    return project_id
 
         return False
+
+    @staticmethod
+    def extract_project_id(field):
+        """
+        Extract project ID from given string.
+
+        :param field: str
+        :return: int|None
+        """
+        if type(field) is dict:
+            project_id = str(field['value'])
+        else:
+            project_id = str(field)
+
+        search = re.search(r'^\d+', project_id)
+        if search:
+            return int(search.group())
+
+        return None
 
     def get_activity_id(self):
         """

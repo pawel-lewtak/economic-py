@@ -30,15 +30,24 @@ class ConfigCheck(object):
             raise Exception('Configuration file config.ini.dist not found.')
 
     @staticmethod
-    def find_differences(dist_items, ini_items):
+    def make_list(tuples):
+        """
+        Create list of first elements in given list of tuples.
+
+        :param tuples: list of tuples
+        :return: list
+        """
+        return [item[0] for item in tuples]
+
+    def find_differences(self, dist_items, ini_items):
         """
         Find and return differences between two lists of settings.
 
         :param dist_items: list of tuples
         :param ini_items: list of tuples
         """
-        ini_keys = [item[0] for item in ini_items]
-        dist_keys = [item[0] for item in dist_items]
+        ini_keys = self.make_list(ini_items)
+        dist_keys = self.make_list(dist_items)
         missing_dist = list(set(dist_keys) - set(ini_keys))
         missing_ini = list(set(ini_keys) - set(dist_keys))
         if missing_dist:
