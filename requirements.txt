@@ -1,5 +1,5 @@
 responses==0.3.0
-click==3.3
+click==4.0
 google-api-python-client==1.4.0
 python-gflags==2.0
 requests==2.6.0
