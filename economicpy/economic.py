@@ -187,7 +187,7 @@ class Economic(object):
 
         if default_activity is False:
             message = 'ERROR - No activity found with ID = %s' % str(activity_id)
-            raise Exception(message)
+            raise RuntimeError(message)
 
         if int(activity_id) in activity_ids:
             return "%s - %s" % (default_activity, title)
