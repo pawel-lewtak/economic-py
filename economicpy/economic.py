@@ -47,7 +47,7 @@ class Economic(object):
                                          'password': self.config['password'],
                                      },
                                      allow_redirects=True)
-        if 'login.e-conomic.com' in response.content:
+        if 'loginfejltype' in response.content:
             raise Exception("ERROR: login to economic failed (check credentials)")
 
         self.init_medarbid()
