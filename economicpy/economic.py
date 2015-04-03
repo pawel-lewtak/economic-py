@@ -47,7 +47,7 @@ class Economic(object):
                                          'password': self.config['password'],
                                      },
                                      allow_redirects=True)
-        if 'loginfejltype' in response.content:
+        if 'loginfejltype' in str(response.content):
             raise Exception("ERROR: login to economic failed (check credentials)")
 
         self.init_medarbid()
@@ -57,7 +57,7 @@ class Economic(object):
         """Get list of available activities from e-conomic and cache it for future use."""
         url = "https://secure.e-conomic.com/secure/applet/fbsearch/fbsearch.asp?kar=10&id=%s&maxResultLength=1000"
         response = self.session.get(url % self.config['default_project_id'])
-        activities = json.loads(response.content)
+        activities = json.loads(response.content.decode('utf8'))
 
         for row in activities['collection']:
             self.activities[int(row['0'])] = row['1']
@@ -74,7 +74,9 @@ class Economic(object):
         :type dry_run: bool
         :return bool
         """
-        entry['task_description'] = entry['task_description'].decode().encode('utf-8')
+        if type(entry['task_description']) != str:
+            entry['task_description'] = entry['task_description'].decode().encode('utf-8')
+
         if entry['task_description'][:20] in self.tasks_html:
             print("SKIPPED - %s" % (entry['task_description']))
             return False
@@ -97,7 +99,7 @@ class Economic(object):
                                          'cs4': None
                                      })
 
-        error_message = re.search(r'"errorMessage": "([^"]+)"', response.content)
+        error_message = re.search(r'"errorMessage": "([^"]+)"', response.content.decode('utf8'))
         if error_message:
             print("ERROR - time entry not added - %s: %s" % (error_message.groups()[0], entry['task_description']))
             return False
@@ -144,7 +146,7 @@ class Economic(object):
               'form=80&projektleder=&medarbid=' + self.medarbid + '&mode=dag&dato='
         date = "%s-%s-%s" % (self.date.day, self.date.month, self.date.year)
         response = self.session.get(url + date)
-        self.tasks_html = response.content
+        self.tasks_html = response.content.decode('utf8')
 
     def init_medarbid(self):
         """
@@ -159,7 +161,7 @@ class Economic(object):
         url = "https://secure.e-conomic.com/Secure/subnav.asp?subnum=10"
         response = self.session.get(url)
 
-        medarbid = re.search(r'medarbid=(\d+)', response.content)
+        medarbid = re.search(r'medarbid=(\d+)', response.content.decode('utf8'))
         if medarbid:
             self.medarbid = medarbid.groups()[0]
         else:

@@ -26,7 +26,7 @@ class TestEconomic(TestCase):
                       body='ok', status=200,
                       content_type='text/html')
         responses.add(responses.GET, 'https://secure.e-conomic.com/Secure/subnav.asp',
-                      body='no medarbid found in html', status=200)
+                      body='no user id found in html', status=200)
         self.assertRaises(RuntimeError, Economic, config, date)
 
     @responses.activate

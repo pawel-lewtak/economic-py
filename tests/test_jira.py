@@ -14,7 +14,6 @@ CONFIG = [
 ]
 
 
-# noinspection PyDocstring
 class TestJira(TestCase):
     def test_jira_init_fails_with_empty_config(self):
         with pytest.raises(KeyError):
