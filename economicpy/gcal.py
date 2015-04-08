@@ -28,6 +28,8 @@ class Calendar(object):
             self.config[key] = value
         self.user_agent = 'economic-py/0.3'
         self.ignore_events = self.config['ignore_events'].lower().split(',')
+        if self.config.get('mock_enabled', False):
+            return
 
         # The client_id and client_secret can be found in Google Developers Console
         flow = OAuth2WebServerFlow(
