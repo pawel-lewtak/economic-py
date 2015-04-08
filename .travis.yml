@@ -8,9 +8,11 @@ install:
   - "pip install -e ."
   - "pip install coverage"
   - "pip install coveralls"
+  - "pip install scrutinizer-ocular"
 # command to run tests
 script:
   - coverage run --source=economicpy setup.py test
 
 after_success:
-    coveralls
+  - coveralls
+  - ocular
