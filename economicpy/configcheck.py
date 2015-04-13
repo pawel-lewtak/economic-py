@@ -1,5 +1,8 @@
 from __future__ import print_function
-import ConfigParser
+try:
+    import ConfigParser as configparser
+except ImportError:
+    import configparser
 import os
 
 
@@ -62,9 +65,9 @@ class ConfigCheck(object):
         :param sections: list of section names to check in both files.
         :return boolean
         """
-        dist = ConfigParser.ConfigParser()
+        dist = configparser.ConfigParser()
         dist.read(self.config_dist)
-        ini = ConfigParser.ConfigParser()
+        ini = configparser.ConfigParser()
         ini.read(self.config_ini)
         for section in sections:
             dist_items = dist.items(section)

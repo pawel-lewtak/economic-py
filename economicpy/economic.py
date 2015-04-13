@@ -6,7 +6,6 @@ from datetime import datetime
 
 
 class Economic(object):
-
     """
     Class related to communication with E-conomic service.
 
@@ -40,13 +39,12 @@ class Economic(object):
 
         :raise Exception: raised in case of invalid credentials
         """
-        response = self.session.post('https://secure.e-conomic.com/secure/internal/login.asp',
-                                     {
-                                         'aftalenr': self.config['agreement'],
-                                         'brugernavn': self.config['username'],
-                                         'password': self.config['password'],
-                                     },
-                                     allow_redirects=True)
+        data = {
+            'aftalenr': self.config['agreement'],
+            'brugernavn': self.config['username'],
+            'password': self.config['password'],
+        }
+        response = self.session.post('https://secure.e-conomic.com/secure/internal/login.asp', data, allow_redirects=True)
         if 'loginfejltype' in str(response.content):
             raise Exception("ERROR: login to economic failed (check credentials)")
 
@@ -87,25 +85,25 @@ class Economic(object):
 
         url = "https://secure.e-conomic.com/secure/applet/df_doform.asp?form=80&medarbid={MEDARBID}&theaction=post"
         url = url.replace('{MEDARBID}', self.medarbid)
-        response = self.session.post(url,
-                                     {
-                                         'cs1': str(entry['date']),
-                                         'cs2': str(entry['project_id']),
-                                         'cs3': str(entry['activity_id']),
-                                         'cs6': str(entry['task_description']),
-                                         'cs7': str(entry['time_spent']),
-                                         'cs10': "False",
-                                         'cs11': "False",
-                                         'cs4': None
-                                     })
+        post_data = {
+            'cs1': str(entry['date']),
+            'cs2': str(entry['project_id']),
+            'cs3': str(entry['activity_id']),
+            'cs6': str(entry['task_description']),
+            'cs7': str(entry['time_spent']),
+            'cs10': "False",
+            'cs11': "False",
+            'cs4': None
+        }
+        response = self.session.post(url, post_data)
 
         error_message = re.search(r'"errorMessage": "([^"]+)"', response.content.decode('utf8'))
         if error_message:
             print("ERROR - time entry not added - %s: %s" % (error_message.groups()[0], entry['task_description']))
             return False
-        else:
-            print("OK - time entry added: %s" % entry['task_description'])
-            return True
+
+        print("OK - time entry added: %s" % entry['task_description'])
+        return True
 
     def convert_calendar_event_to_entry(self, event):
         """

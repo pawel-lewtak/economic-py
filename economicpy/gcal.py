@@ -31,18 +31,25 @@ class Calendar(object):
         if self.config.get('mock_enabled', False):
             return
 
+        self.login(src_path)
+
+    def login(self, src_path):
+        """
+        Login to Google API using data provided in config.
+
+        :param src_path: path to calendar credentials
+        :type src_path: str
+        """
         # The client_id and client_secret can be found in Google Developers Console
         flow = OAuth2WebServerFlow(
             client_id=self.config['client_id'],
             client_secret=self.config['client_secret'],
             scope='https://www.googleapis.com/auth/calendar',
             user_agent=self.user_agent)
-
         # To disable the local server feature, uncomment the following line:
         # import gflags
         # FLAGS = gflags.FLAGS
         # FLAGS.auth_local_webserver = False
-
         # If the Credentials don't exist or are invalid, run through the native client
         # flow. The Storage object will ensure that if successful the good
         # Credentials will get written back to a file.
@@ -55,7 +62,6 @@ class Calendar(object):
         # with our good Credentials.
         http = httplib2.Http()
         http = credentials.authorize(http)
-
         # Build a service object for interacting with the API. Visit
         # the Google Developers Console
         # to get a developerKey for your own application.

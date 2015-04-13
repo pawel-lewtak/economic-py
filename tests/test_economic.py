@@ -1,4 +1,3 @@
-import requests
 import responses
 from unittest import TestCase
 from economicpy.economic import Economic
@@ -117,7 +116,7 @@ class TestEconomic(TestCase):
             'activity_id': 10,
             'date': date.isoformat()[:10],
             'project_id': 100,
-            'task_description': u'Project Name - Task Title',
+            'task_description': 'Project Name - Task Title',
             'time_spent': '0,0'
         }
         entry = economic.convert_calendar_event_to_entry(event)
