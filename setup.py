@@ -38,7 +38,7 @@ setuptools.setup(
     tests_require=['pytest'],
     install_requires=[
         "gdata==2.0.18",
-        "requests==2.6.1",
+        "requests==2.6.2",
         "click==4.0",
         "responses==0.3.0",
         "google-api-python-client==1.4.0"
