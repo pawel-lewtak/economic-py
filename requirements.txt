@@ -1,4 +1,4 @@
-responses==0.3.0
+responses==0.4.0
 click==4.0
 google-api-python-client==1.4.0
 python-gflags==2.0
