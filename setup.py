@@ -41,7 +41,7 @@ setuptools.setup(
         "requests==2.7.0",
         "click==4.0",
         "responses==0.4.0",
-        "google-api-python-client==1.4.0"
+        "google-api-python-client==1.4.1"
     ],
     cmdclass={'test': PyTest},
 
