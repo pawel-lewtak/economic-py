@@ -219,5 +219,3 @@ class TestEconomic(TestCase):
 
         }
         self.assertFalse(economic.add_time_entry(entry))
-
-

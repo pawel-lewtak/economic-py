@@ -9,6 +9,7 @@ from oauth2client.tools import run
 
 
 class Calendar(object):
+
     """
     Class related to communication with Google Calendar using API V3.
 
@@ -31,6 +32,7 @@ class Calendar(object):
         if self.config.get('mock_enabled', False):
             return
 
+        self.service = None
         self.login(src_path)
 
     def login(self, src_path):

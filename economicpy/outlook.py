@@ -5,6 +5,7 @@ import json
 
 
 class OutlookCalendar(object):
+
     """
     Class related to communication with Google Calendar using API V3.
 

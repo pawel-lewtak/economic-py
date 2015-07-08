@@ -6,6 +6,7 @@ from datetime import datetime
 
 
 class Economic(object):
+
     """
     Class related to communication with E-conomic service.
 
@@ -44,7 +45,8 @@ class Economic(object):
             'brugernavn': self.config['username'],
             'password': self.config['password'],
         }
-        response = self.session.post('https://secure.e-conomic.com/secure/internal/login.asp', data, allow_redirects=True)
+        response = self.session.post('https://secure.e-conomic.com/secure/internal/login.asp', data,
+                                     allow_redirects=True)
         if 'loginfejltype' in str(response.content):
             raise Exception("ERROR: login to economic failed (check credentials)")
 

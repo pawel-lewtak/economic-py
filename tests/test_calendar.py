@@ -156,4 +156,3 @@ class TestCalendar(TestCase):
     def test_get_activity_id_returns_exctracted_activity_id(self):
         cal = Calendar(config, '')
         self.assertEquals(cal.get_activity_id('#activitY: 234'), 234)
-
