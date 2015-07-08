@@ -9,6 +9,7 @@ from economicpy.gcal import Calendar
 from economicpy.jira import Jira
 from economicpy.economic import Economic
 from economicpy.configcheck import ConfigCheck
+from economicpy.outlook import OutlookCalendar
 
 
 @click.command()
@@ -38,11 +39,22 @@ def run(dry_run, date):
     economic = Economic(config.items('Economic'), date)
 
     # Add entries from Google Calendar.
-    calendar = Calendar(config.items('Google'), src_path)
+    economic_config = dict(config.items('Economic'))
+    if 'Google' == economic_config['calendar_provider']:
+        calendar = Calendar(config.items('Google'), src_path)
+    elif 'Office365' == economic_config['calendar_provider']:
+        calendar = OutlookCalendar(config.items('Office365'))
+    else:
+        print ("Unsupported calendar provider")
+        sys.exit(1)
+
     for event in calendar.get_events(today, tomorrow):
-        entry = economic.convert_calendar_event_to_entry(event)
-        if entry:
-            economic.add_time_entry(entry, dry_run)
+        try:
+            entry = economic.convert_calendar_event_to_entry(event)
+            if entry:
+                economic.add_time_entry(entry, dry_run)
+        except UnicodeDecodeError as e:
+            print (e)
 
     # Add entries from JIRA.
     if date is not None:
