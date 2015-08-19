@@ -145,6 +145,7 @@ class OutlookCalendar(object):
 
         while True:
             response = requests.get(url, auth=(self.config['email'], self.config['password']))
+            response.raise_for_status()
             response_json = json.loads(response.content)
             events = response_json['value']
             events = self.get_events_with_attendees(events)
