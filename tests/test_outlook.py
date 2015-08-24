@@ -192,3 +192,7 @@ class TestOutlookCalendar(TestCase):
                           'start_date': u'1970-01-01T07:30:00Z',
                           'title': 'Outlook meeting'}
         self.assertEquals(events.next(), expected_event)
+
+        # We expect just one event to be yielded and iteration to stop after that.
+        with self.assertRaises(StopIteration):
+            events.next()
