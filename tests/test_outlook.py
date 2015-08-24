@@ -1,4 +1,6 @@
 import copy
+import requests
+import responses
 from economicpy.outlook import OutlookCalendar
 from unittest import TestCase
 
@@ -8,7 +10,8 @@ config = [
     ('activity_id_pattern', '#activity[^0-9]+([0-9]+)'),
     ('default_activity_id', 10),
     ('default_project_id', 20),
-    ('mock_enabled', True)
+    ('email', 'email@example.com'),
+    ('password', 'test')
 ]
 
 
@@ -137,3 +140,13 @@ class TestOutlookCalendar(TestCase):
     def test_get_activity_id_returns_exctracted_activity_id(self):
         cal = OutlookCalendar(config)
         self.assertEquals(cal.get_activity_id('#activitY: 234'), 234)
+
+    @responses.activate
+    def test_get_events_raises_exception_on_error(self):
+        responses.add(responses.GET, 'https://outlook.office365.com/api/v1.0/me/calendarview?startDateTime=1970-01-01T00:00:00Z&endDateTime=1970-01-02T00:00:00Z',
+                      body='', status=401,
+                      content_type='text/html')
+        cal = OutlookCalendar(config)
+        events = cal.get_events(start_date='1970-01-01T00:00:00Z', end_date='1970-01-02T00:00:00Z')
+        with self.assertRaises(requests.ConnectionError):
+            events.next()

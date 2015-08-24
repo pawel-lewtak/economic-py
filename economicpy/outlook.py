@@ -23,8 +23,6 @@ class OutlookCalendar(object):
             self.config[key] = value
         self.ignore_events = self.config['ignore_events'].lower().split(',')
         self.rest_api_url = 'https://outlook.office365.com/api/v1.0/me/calendarview?startDateTime=%s&endDateTime=%s'
-        if self.config.get('mock_enabled', False):
-            return
 
     def ignore_event(self, event):
         """
