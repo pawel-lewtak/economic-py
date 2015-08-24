@@ -1,6 +1,7 @@
 import copy
 import requests
 import responses
+import json
 from economicpy.outlook import OutlookCalendar
 from unittest import TestCase
 
@@ -143,10 +144,51 @@ class TestOutlookCalendar(TestCase):
 
     @responses.activate
     def test_get_events_raises_exception_on_error(self):
-        responses.add(responses.GET, 'https://outlook.office365.com/api/v1.0/me/calendarview?startDateTime=1970-01-01T00:00:00Z&endDateTime=1970-01-02T00:00:00Z',
+        responses.add(responses.GET,
+                      'https://outlook.office365.com/api/v1.0/me/calendarview?startDateTime=1970-01-01T00:00:00Z&endDateTime=1970-01-02T00:00:00Z',
                       body='', status=401,
                       content_type='text/html')
         cal = OutlookCalendar(config)
         events = cal.get_events(start_date='1970-01-01T00:00:00Z', end_date='1970-01-02T00:00:00Z')
         with self.assertRaises(requests.ConnectionError):
             events.next()
+
+    @responses.activate
+    def test_get_events_returns_proper_event_dict(self):
+        response_body = {
+            "value": [
+                {
+                    "Subject": "Outlook meeting",
+                    "Body": {
+                        "Content": "Meeting content"
+                    },
+                    "Start": "1970-01-01T07:30:00Z",
+                    "End": "1970-01-01T07:45:00Z",
+                    "ResponseStatus": {
+                        "Response": "Accepted",
+                        "Time": "1970-01-01T06:30:00.0000000Z"
+                    },
+                    "Attendees": [
+                        {
+                            "EmailAddress": {
+                                "Address": "email@example.com",
+                                "Name": "John Doe"
+                            },
+                            "Status": "Accepted"
+                        }
+                    ]
+                }
+            ]
+        }
+        responses.add(responses.GET,
+                      'https://outlook.office365.com/api/v1.0/me/calendarview',
+                      body=json.dumps(response_body), status=200,
+                      content_type='application/json')
+        cal = OutlookCalendar(config)
+        events = cal.get_events(start_date='1970-01-01T00:00:00Z', end_date='1970-01-02T00:00:00Z')
+        expected_event = {'activity_id': 10,
+                          'end_date': u'1970-01-01T07:45:00Z',
+                          'project_id': 20,
+                          'start_date': u'1970-01-01T07:30:00Z',
+                          'title': 'Outlook meeting'}
+        self.assertEquals(events.next(), expected_event)
