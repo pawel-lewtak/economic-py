@@ -5,11 +5,11 @@ import datetime
 import os
 import click
 import sys
-from economicpy.gcal import Calendar
+from economicpy.calendar_google import CalendarGoogle
 from economicpy.jira import Jira
 from economicpy.economic import Economic
 from economicpy.configcheck import ConfigCheck
-from economicpy.outlook import OutlookCalendar
+from economicpy.calendar_outlook import CalendarOutlook
 
 
 @click.command()
@@ -85,9 +85,9 @@ def get_calendar_provider(config, src_path):
     """
     economic_config = dict(config.items('Economic'))
     if 'Google' == economic_config['calendar_provider']:
-        calendar = Calendar(config.items('Google'), src_path)
+        calendar = CalendarGoogle(config.items('Google'), src_path)
     elif 'Office365' == economic_config['calendar_provider']:
-        calendar = OutlookCalendar(config.items('Office365'))
+        calendar = CalendarOutlook(config.items('Office365'))
     else:
         print("Unsupported calendar provider")
         sys.exit(1)

@@ -79,7 +79,7 @@ class Jira(object):
         Make separate API call for given issue's worklog and return it.
 
         :param issue_id:
-        :type issue_id: int
+        :type issue_id: str
         :return list
         """
         return self.make_request('issue/%s/worklog' % issue_id)['worklogs']
