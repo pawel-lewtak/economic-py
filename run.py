@@ -8,7 +8,7 @@ import sys
 from economicpy.calendar_google import CalendarGoogle
 from economicpy.jira import Jira
 from economicpy.economic import Economic
-from economicpy.configcheck import ConfigCheck
+from economicpy.config_check import ConfigCheck
 from economicpy.calendar_outlook import CalendarOutlook
 
 
