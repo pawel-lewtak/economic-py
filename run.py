@@ -5,6 +5,8 @@ import datetime
 import os
 import click
 import sys
+import requests.packages.urllib3
+requests.packages.urllib3.disable_warnings()
 from economicpy.calendar_google import CalendarGoogle
 from economicpy.jira import Jira
 from economicpy.economic import Economic
