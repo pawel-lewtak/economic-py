@@ -3,9 +3,9 @@ import httplib2
 
 from calendar import Calendar
 from apiclient.discovery import build
+from oauth2client import tools
 from oauth2client.file import Storage
 from oauth2client.client import OAuth2WebServerFlow
-from oauth2client.tools import run
 
 
 class CalendarGoogle(Calendar):
@@ -55,7 +55,7 @@ class CalendarGoogle(Calendar):
         storage = Storage(src_path + '/calendar.dat')
         credentials = storage.get()
         if credentials is None or credentials.invalid is True:
-            credentials = run(flow, storage)
+            credentials = tools.run(flow, storage)
 
         # Create an httplib2.Http object to handle our HTTP requests and authorize it
         # with our good Credentials.

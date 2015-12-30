@@ -31,17 +31,17 @@ setuptools.setup(
     author="Pawel Lewtak",
 
     description="Sync Jira issues and Google Calendar events with e-conomic",
-    long_description=open('README.md').read(),
+    long_description='',
 
     packages=setuptools.find_packages(),
 
     tests_require=['pytest'],
     install_requires=[
         "gdata==2.0.18",
-        "requests==2.7.0",
-        "click==5.1",
-        "responses==0.4.0",
-        "google-api-python-client==1.4.1"
+        "requests==2.9.1",
+        "click==6.2",
+        "responses==0.5.0",
+        "google-api-python-client==1.4.2"
     ],
     cmdclass={'test': PyTest},
 
