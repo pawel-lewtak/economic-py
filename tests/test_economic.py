@@ -1,4 +1,5 @@
 import responses
+import copy
 from unittest import TestCase
 from economicpy.economic import Economic
 from datetime import datetime
@@ -7,7 +8,8 @@ config = [('agreement', '123456'),
           ('username', 'USR'),
           ('password', 'password1'),
           ('default_project_id', '100'),
-          ('append_title_for_activities', '10')]
+          ('append_title_for_activities', '10'),
+          ('user_id', '12')]
 date = datetime.now()
 
 
@@ -21,24 +23,43 @@ class TestEconomic(TestCase):
 
     @responses.activate
     def test_login_ok_no_medarbid(self):
+        config_copy = copy.copy(config)
+        config_copy.pop()
+        config_copy.append(('user_id', ''))
         responses.add(responses.POST, 'https://secure.e-conomic.com/secure/internal/login.asp',
                       body='ok', status=200,
                       content_type='text/html')
+        responses.add(responses.GET, 'https://secure.e-conomic.com/Secure/generelt/dataedit.asp',
+                      body='html task list', status=200)
         responses.add(responses.GET, 'https://secure.e-conomic.com/Secure/subnav.asp',
                       body='no user id found in html', status=200)
-        self.assertRaises(RuntimeError, Economic, config, date)
+        self.assertRaises(RuntimeError, Economic, config_copy, date)
 
     @responses.activate
-    def test_login_ok(self):
+    def test_login_ok_medarbid_from_config(self):
         responses.add(responses.POST, 'https://secure.e-conomic.com/secure/internal/login.asp',
                       body='ok', status=200,
                       content_type='text/html')
-        responses.add(responses.GET, 'https://secure.e-conomic.com/Secure/subnav.asp',
-                      body='medarbid=10', status=200)
         responses.add(responses.GET, 'https://secure.e-conomic.com/Secure/generelt/dataedit.asp',
                       body='html task list', status=200)
         economic = Economic(config, date)
-        self.assertEqual('10', economic.medarbid)
+        self.assertEqual('12', economic.medarbid)
+        self.assertEqual('html task list', economic.tasks_html)
+
+    @responses.activate
+    def test_login_ok_medarbid_from_web(self):
+        config_copy = copy.copy(config)
+        config_copy.pop()
+        config_copy.append(('user_id', ''))
+        responses.add(responses.POST, 'https://secure.e-conomic.com/secure/internal/login.asp',
+                      body='ok', status=200,
+                      content_type='text/html')
+        responses.add(responses.GET, 'https://secure.e-conomic.com/Secure/subnav.asp',
+                      body='medarbid=14', status=200)
+        responses.add(responses.GET, 'https://secure.e-conomic.com/Secure/generelt/dataedit.asp',
+                      body='html task list', status=200)
+        economic = Economic(config_copy, date)
+        self.assertEqual('14', economic.medarbid)
         self.assertEqual('html task list', economic.tasks_html)
 
     @responses.activate

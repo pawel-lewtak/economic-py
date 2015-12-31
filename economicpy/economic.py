@@ -155,9 +155,11 @@ class Economic(object):
         In order to make Economic work we need user ID. Even though we pass User ID in login form,
         Economic is internally using another user ID called "medarbid" which indicates specific
         user within given agreement number.
-
-        Fun fact: changing this ID allows you to add entries for another user without need for his credentials.
         """
+        if self.config['user_id'].isdigit():
+            self.medarbid = self.config['user_id']
+            return
+
         url = "https://secure.e-conomic.com/Secure/subnav.asp?subnum=10"
         response = self.session.get(url)
 
