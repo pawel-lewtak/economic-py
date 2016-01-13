@@ -15,7 +15,7 @@ class Calendar(object):
         self.config = {}
         for key, value in config:
             self.config[key] = value
-        self.user_agent = 'economic-py/0.7'
+        self.user_agent = 'economic-py'
         self.ignore_events = self.config['ignore_events'].lower().split(',')
         self.event_summary_field = ''
         self.event_attendees_field = ''
