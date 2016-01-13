@@ -16,14 +16,14 @@ class CalendarGoogle(Calendar):
     :param src_path: str
     """
 
-    def __init__(self, config, src_path, *args, **kwargs):
+    def __init__(self, config, src_path):
         """
             Set configuration and init variables.
 
             :type src_path: str
             :type config: list of tuples
             """
-        super(CalendarGoogle, self).__init__(config, *args, **kwargs)
+        super(CalendarGoogle, self).__init__(config)
         self.event_summary_field = 'summary'
         self.event_attendees_field = 'attendees'
         if self.config.get('mock_enabled', False):

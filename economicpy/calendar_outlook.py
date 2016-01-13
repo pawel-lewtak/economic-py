@@ -11,13 +11,13 @@ class CalendarOutlook(Calendar):
     :param config: list
     """
 
-    def __init__(self, config, *args, **kwargs):
+    def __init__(self, config):
         """
         Set configuration and init variables.
 
         :type config: list of tuples
         """
-        super(CalendarOutlook, self).__init__(config, *args, **kwargs)
+        super(CalendarOutlook, self).__init__(config)
         self.rest_api_url = 'https://outlook.office365.com/api/v1.0/me/calendarview?startDateTime=%s&endDateTime=%s'
         self.event_summary_field = 'Subject'
         self.event_attendees_field = 'Attendees'

@@ -6,11 +6,10 @@ class Calendar(object):
     Base class that will serve to support different web based calendars.
     """
 
-    def __init__(self, config, *args, **kwargs):
+    def __init__(self, config):
         """
         Set configuration and init variables.
 
-        :type src_path: str
         :type config: list of tuples
         """
         self.config = {}
