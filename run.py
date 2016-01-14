@@ -6,18 +6,19 @@ import os
 import click
 import sys
 import requests.packages.urllib3
-requests.packages.urllib3.disable_warnings()
 from economicpy.calendar_google import CalendarGoogle
 from economicpy.jira import Jira
 from economicpy.economic import Economic
 from economicpy.config_check import ConfigCheck
 from economicpy.calendar_outlook import CalendarOutlook
 
+requests.packages.urllib3.disable_warnings()
+
 
 @click.command()
 @click.option('--dry-run', is_flag=True, default=False, help='Simulated run without creating new entries.')
 @click.option('--date', default=None, help='Date in format YYYY-MM-DD for which data should be used.')
-def run(dry_run, date):
+def run(dry_run=False, date=None):
     """
     Main function to be run in order to export data to e-conomic.
 
@@ -32,27 +33,54 @@ def run(dry_run, date):
     except ValueError:
         sys.exit("Incorrect date format used. Expected: YYYY-MM-DD")
 
-    today = date.isoformat()[:10] + "T00:00:00Z"
-    tomorrow = (date + datetime.timedelta(days=1)).isoformat()[:10] + "T00:00:00Z"
+    if dry_run:
+        print("This is just dry run, no changes will be made.")
     print("Running export for %s:" % date.isoformat()[:10])
 
     src_path = os.path.abspath(os.path.dirname(__file__))
     config = get_configuration(src_path)
-
     economic = Economic(config.items('Economic'), date)
 
     # Get entries from provided calendar.
     calendar = get_calendar_provider(config, src_path)
+    add_calendar_entries(calendar, dry_run, economic, date)
 
+    # Add entries from JIRA.
+    add_jira_entries(config, date, dry_run, economic)
+
+
+def add_calendar_entries(calendar, dry_run, economic, date):
+    """
+    Add Calendar meetings as time entries to E-conomic
+
+    :param calendar:
+    :param dry_run:
+    :param economic:
+    :param today:
+    :param tomorrow:
+    :return:
+    """
+    today = date.isoformat()[:10] + "T00:00:00Z"
+    tomorrow = (date + datetime.timedelta(days=1)).isoformat()[:10] + "T00:00:00Z"
     for event in calendar.get_events(today, tomorrow):
         try:
             entry = economic.convert_calendar_event_to_entry(event)
             if entry:
                 economic.add_time_entry(entry, dry_run)
         except UnicodeDecodeError as e:
-            print (e)
+            print(e)
 
-    # Add entries from JIRA.
+
+def add_jira_entries(config, date, dry_run, economic):
+    """
+    Add JIRA tasks as time entries to E-conomic
+
+    :param config:
+    :param date:
+    :param dry_run:
+    :param economic:
+    :return:
+    """
     if date is not None:
         jira = Jira(config.items('Jira'))
         for task in jira.get_tasks():
