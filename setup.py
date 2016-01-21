@@ -23,35 +23,35 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-setuptools.setup(
-    name="economic-py",
-    version="master",
-    url="https://github.com/pawel-lewtak/economic-py",
+if __name__ == "__main__":
+    setuptools.setup(
+            name="economic-py",
+            description="Sync Jira issues and Google Calendar events with e-conomic",
+            license='MIT',
+            url="https://github.com/pawel-lewtak/economic-py",
+            version="0.9",
+            author="Pawel Lewtak",
+            maintainer='Pawel Lewtak',
+            long_description='',
+            packages=setuptools.find_packages(),
 
-    author="Pawel Lewtak",
-
-    description="Sync Jira issues and Google Calendar events with e-conomic",
-    long_description='',
-
-    packages=setuptools.find_packages(),
-
-    tests_require=['pytest'],
-    install_requires=[
-        "gdata==2.0.18",
-        "requests==2.9.1",
-        "click==6.2",
-        "responses==0.5.0",
-        "google-api-python-client==1.4.2"
-    ],
-    cmdclass={'test': PyTest},
-
-    classifiers=[
-        'Development Status :: 4 - Beta',
-        'Environment :: Console',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        # 'Programming Language :: Python :: 3',
-    ],
-)
+            tests_require=['pytest'],
+            install_requires=[
+                "gdata==2.0.18",
+                "requests==2.9.1",
+                "click==6.2",
+                "responses==0.5.0",
+                "google-api-python-client==1.4.2"
+            ],
+            cmdclass={'test': PyTest},
+            classifiers=[
+                'Development Status :: 5 - Production/Stable',
+                'Environment :: Console',
+                'Intended Audience :: Developers',
+                'License :: OSI Approved :: MIT License',
+                'Programming Language :: Python',
+                'Programming Language :: Python :: 2',
+                'Programming Language :: Python :: 2.7',
+                # 'Programming Language :: Python :: 3',
+            ],
+    )
