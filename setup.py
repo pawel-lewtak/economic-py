@@ -40,7 +40,7 @@ if __name__ == "__main__":
                 "gdata==2.0.18",
                 "requests==2.9.1",
                 "click==6.2",
-                "responses==0.5.0",
+                "responses==0.5.1",
                 "google-api-python-client==1.4.2"
             ],
             cmdclass={'test': PyTest},
