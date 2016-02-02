@@ -29,8 +29,18 @@ class Economic(object):
         self.date = date
         for item in config:
             self.config[item[0]] = item[1]
+        self.init_activity_formatting()
 
         self.login()
+
+    def init_activity_formatting(self):
+        formats = {}
+
+        for x in self.config['description_format'].split('\n')[1:]:
+            activity_id, desc_format = (map(str.strip, x.split('=')))
+            formats[int(activity_id)] = desc_format
+
+        self.config['description_format'] = formats
 
     def login(self):
         """
@@ -183,17 +193,16 @@ class Economic(object):
         :type activity_id: int
         :return str
         """
-        activity_ids = []
-        if self.config.get('append_title_for_activities'):
-            activity_ids = map(int, self.config.get('append_title_for_activities').split(','))
-
         default_activity = self.activities.get(int(activity_id), False)
-
         if default_activity is False:
             message = 'ERROR - No activity found with ID = %s' % str(activity_id)
             raise RuntimeError(message)
 
-        if int(activity_id) in activity_ids:
-            return "%s - %s" % (default_activity, title)
+        if activity_id not in self.config['description_format']:
+            return default_activity
 
-        return default_activity
+        description_format = self.config['description_format'].get(activity_id)
+        description_format = description_format.replace('{CUSTOM}', title)
+        description_format = description_format.replace('{DEFAULT}', self.activities.get(int(activity_id), False))
+
+        return description_format

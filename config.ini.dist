@@ -19,8 +19,13 @@ password=
 user_id=
 ; Default project. Will be used when project ID is not found in JIRA or Google Calendar.
 default_project_id=
-;Comma separated list of activity ID for which event title should appended to description
-append_title_for_activities=
+; Custom formats for activity description. If none defined default description will be used.
+; Each rule should be on separate line. Variables available (with curly braces):
+; {CUSTOM} - will be replaced with event/task name
+; {DEFAULT} - will be replaced with default activity description
+description_format=
+    1 = {CUSTOM}
+    5 = {DEFAULT} - {CUSTOM}
 ;Name of calendar events provider. Currently supported: Google, Office365
 calendar_provider=
 
