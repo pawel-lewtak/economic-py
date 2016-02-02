@@ -56,8 +56,7 @@ def add_calendar_entries(calendar, dry_run, economic, date):
     :param calendar:
     :param dry_run:
     :param economic:
-    :param today:
-    :param tomorrow:
+    :param date:
     :return:
     """
     today = date.isoformat()[:10] + "T00:00:00Z"

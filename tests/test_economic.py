@@ -8,7 +8,7 @@ config = [('agreement', '123456'),
           ('username', 'USR'),
           ('password', 'password1'),
           ('default_project_id', '100'),
-          ('append_title_for_activities', '10'),
+          ('description_format', '\n10={DEFAULT} - {CUSTOM}'),
           ('user_id', '12')]
 date = datetime.now()
 
