@@ -39,7 +39,7 @@ class Jira(object):
     def get_tasks(self):
         """Generator returning all tasks assigned to current user that match filter specified in configuration."""
         tasks = self.make_request(
-            'search?jql=' + self.config['search_query'] + '&fields=*all,-comment'
+            'search?jql=' + self.config['search_query'] + '&fields=summary,' + self.config['economic_field']
         )
 
         for issue in tasks['issues']:
