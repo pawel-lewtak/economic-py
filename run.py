@@ -26,11 +26,8 @@ def run(dry_run=False, date=None):
     :param date: date in format YYYY-MM-DD
     """
     try:
-        skip_jira = False
         if date:
             date = datetime.datetime.strptime(str(date), "%Y-%m-%d")
-            # Can't import tasks from Jira for given day yet. See issue #16
-            skip_jira = True
         else:
             date = datetime.datetime.now()
     except ValueError:
@@ -49,8 +46,7 @@ def run(dry_run=False, date=None):
     add_calendar_entries(calendar, dry_run, economic, date)
 
     # Add entries from JIRA.
-    if not skip_jira:
-        add_jira_entries(config, date, dry_run, economic)
+    add_jira_entries(config, date, dry_run, economic)
 
 
 def add_calendar_entries(calendar, dry_run, economic, date):
