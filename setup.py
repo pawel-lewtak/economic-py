@@ -39,9 +39,9 @@ if __name__ == "__main__":
             install_requires=[
                 "gdata==2.0.18",
                 "requests==2.9.1",
-                "click==6.2",
+                "click==6.3",
                 "responses==0.5.1",
-                "google-api-python-client==1.4.2"
+                "google-api-python-client==1.5.0"
             ],
             cmdclass={'test': PyTest},
             classifiers=[
