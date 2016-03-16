@@ -37,11 +37,11 @@ if __name__ == "__main__":
 
             tests_require=['pytest'],
             install_requires=[
-                "gdata==2.0.18",
-                "requests==2.9.1",
-                "click==6.3",
-                "responses==0.5.1",
-                "google-api-python-client==1.5.0"
+                "gdata>=2.0.18",
+                "requests>=2.9.1",
+                "click>=6.2",
+                "responses>=0.5.1",
+                "google-api-python-client>=1.4.2"
             ],
             cmdclass={'test': PyTest},
             classifiers=[
