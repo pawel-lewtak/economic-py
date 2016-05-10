@@ -39,17 +39,17 @@ class TestJira(TestCase):
                       content_type='application/json')
         jira = Jira(CONFIG)
         response = jira.make_request('search')
-        assert (0 == response['total'])
+        assert 0 == response['total']
 
     def test_default_activity_as_defined_in_config(self):
         config = copy.copy(CONFIG)
         config.append(('default_activity_id', 1))
         jira = Jira(config)
-        assert (1 == jira.get_activity_id())
+        assert 1 == jira.get_activity_id()
 
     def test_default_activity_false_when_not_defined(self):
         jira = Jira(CONFIG)
-        assert (False == jira.get_activity_id())
+        assert jira.get_activity_id() is False
 
     @responses.activate
     def test_jira_returns_worklog(self):
@@ -58,54 +58,54 @@ class TestJira(TestCase):
                       content_type='application/json')
         jira = Jira(CONFIG)
         response = jira.get_worklog('TEST-1')
-        assert (["worklog"] == response)
+        assert ["worklog"] == response
 
     def test_project_id_as_false_when_no_economic_field_defined(self):
         config = copy.copy(CONFIG)
         config.append(('economic_field', ''))
         jira = Jira(config)
-        assert (False == jira.get_project_id({}))
+        assert jira.get_project_id({}) is False
 
     def test_project_id_not_in_defined_field(self):
         config = copy.copy(CONFIG)
         config.append(('economic_field', 'customfield'))
         jira = Jira(config)
-        assert (False == jira.get_project_id({}))
+        assert jira.get_project_id({}) is False
 
     def test_project_id_as_dict(self):
         config = copy.copy(CONFIG)
         config.append(('economic_field', 'custom_field'))
         jira = Jira(config)
         fields = {'id': 1, 'custom_field': {'value': 123}, 'other_field': 234}
-        assert (123 == jira.get_project_id(fields))
+        assert 123 == jira.get_project_id(fields)
 
     def test_project_id_as_value(self):
         config = copy.copy(CONFIG)
         config.append(('economic_field', 'custom_field'))
         jira = Jira(config)
         fields = {'id': 1, 'custom_field': 123, 'other_field': 234}
-        assert (123 == jira.get_project_id(fields))
+        assert 123 == jira.get_project_id(fields)
 
     def test_project_id_as_value_multiple_fields_defined(self):
         config = copy.copy(CONFIG)
         config.append(('economic_field', 'custom_field,second_field'))
         jira = Jira(config)
         fields = {'id': 1, 'custom_field': 123, 'other_field': 234}
-        assert (123 == jira.get_project_id(fields))
+        assert 123 == jira.get_project_id(fields)
 
     def test_project_id_as_value_part_of_string(self):
         config = copy.copy(CONFIG)
         config.append(('economic_field', 'custom_field'))
         jira = Jira(config)
         fields = {'id': 1, 'custom_field': '123 project name', 'other_field': 234}
-        assert (123 == jira.get_project_id(fields))
+        assert 123 == jira.get_project_id(fields)
 
     def test_project_id_does_not_contain_number_value(self):
         config = copy.copy(CONFIG)
         config.append(('economic_field', 'custom_field'))
         jira = Jira(config)
         fields = {'id': 1, 'custom_field': 'project name', 'other_field': 234}
-        assert (jira.get_project_id(fields) is False)
+        assert jira.get_project_id(fields) is False
 
     @responses.activate
     def test_hours_without_worklog(self):
@@ -114,7 +114,7 @@ class TestJira(TestCase):
                       content_type='application/json')
         config = copy.copy(CONFIG)
         jira = Jira(config)
-        assert (0.0 == jira.get_hours('TEST-1'))
+        assert 0.0 == jira.get_hours('TEST-1')
 
     @responses.activate
     def test_hours_with_worklog(self):
@@ -125,7 +125,7 @@ class TestJira(TestCase):
                       content_type='application/json')
         config = copy.copy(CONFIG)
         jira = Jira(config)
-        assert (0.5 == jira.get_hours('TEST-1'))
+        assert 0.5 == jira.get_hours('TEST-1')
 
     @responses.activate
     def test_get_tasks_empty_result(self):
@@ -144,7 +144,7 @@ class TestJira(TestCase):
                       content_type='application/json')
         jira = Jira(config)
         tasks = jira.get_tasks()
-        assert (False == next(tasks, False))
+        assert False == next(tasks, False)
 
     @responses.activate
     def test_get_one_task(self):
@@ -163,11 +163,11 @@ class TestJira(TestCase):
                       content_type='application/json')
         jira = Jira(config)
         task = next(jira.get_tasks())
-        assert ('100' == task['activity_id'])
-        assert (datetime.datetime.now().isoformat()[:10] == task['date'])
-        assert (200 == task['project_id'])
-        assert ('TEST-1 Task summary' == task['task_description'])
-        assert ('0,0' == task['time_spent'])
+        assert '100' == task['activity_id']
+        assert datetime.datetime.now().isoformat()[:10] == task['date']
+        assert 200 == task['project_id']
+        assert 'TEST-1 Task summary' == task['task_description']
+        assert '0,0' == task['time_spent']
 
     @responses.activate
     def test_get_task_without_economic_id(self):
@@ -186,4 +186,4 @@ class TestJira(TestCase):
                       content_type='application/json')
         jira = Jira(config)
         tasks = jira.get_tasks()
-        assert (False == next(tasks, False))
+        assert next(tasks, False) is False

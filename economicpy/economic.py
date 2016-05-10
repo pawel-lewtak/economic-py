@@ -37,7 +37,7 @@ class Economic(object):
         formats = {}
 
         for x in self.config['description_format'].split('\n')[1:]:
-            activity_id, desc_format = (map(str.strip, x.split('=')))
+            activity_id, desc_format = map(str.strip, x.split('='))
             formats[int(activity_id)] = desc_format
 
         self.config['description_format'] = formats
