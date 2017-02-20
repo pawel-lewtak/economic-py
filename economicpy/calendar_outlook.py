@@ -93,7 +93,6 @@ class CalendarOutlook(Calendar):
             events = self.get_events_with_attendees(events)
             events = self.get_accepted_events(events)
             events = self.skip_ignored_events(events)
-            # events = self.get_events_with_proper_dates(events)
             for event in events:
                 yield {
                     'start_date': event['Start'],
