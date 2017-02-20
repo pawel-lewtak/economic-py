@@ -35,7 +35,7 @@ if __name__ == "__main__":
             long_description='',
             packages=setuptools.find_packages(),
 
-            tests_require=['pytest'],
+            tests_require=['pytest', 'pep257'],
             install_requires=[
                 "gdata>=2.0.18,<=3.0",
                 "requests>=2.9.1,<=3.0",
