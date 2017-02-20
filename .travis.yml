@@ -1,3 +1,16 @@
+dist: trusty
+sudo: required
+addons:
+  sonarqube:
+    token:
+      secure: "YHpi5ZtRDFlDtmLuJDO2tDli7lmL6erlg2EIjT1V/Hj5AFTXQ3VFgNnyqgvkbOQVzSshnWSSZLUfkUoWvCOMlReYg8mRB+tqgtTQROiCxL9r4Uxzpnkb4UWLJlbbRynMjgTbpAFWBYbfKMd7Z1qiPL74xXlXDkUbEYyxBCENKXY="
+jdk:
+  - oraclejdk8
+script:
+  - sonar-scanner
+cache:
+  directories:
+    - '$HOME/.sonar/cache'
 language: python
 python:
   - "2.7"
