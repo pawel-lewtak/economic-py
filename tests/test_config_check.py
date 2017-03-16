@@ -1,9 +1,15 @@
 import sys
-from mock import patch
 from unittest import TestCase
 from economicpy.config_check import ConfigCheck
 from contextlib import contextmanager
-from StringIO import StringIO
+try:
+    from mock import patch
+except ImportError:
+    from unittest.mock import patch
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 
 @contextmanager
