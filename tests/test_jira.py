@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pytest
 import requests
 import responses
@@ -106,6 +107,13 @@ class TestJira(TestCase):
         jira = Jira(config)
         fields = {'id': 1, 'custom_field': 'project name', 'other_field': 234}
         assert jira.get_project_id(fields) is False
+
+    def test_project_id_contains_non_ascii_character(self):
+        config = copy.copy(CONFIG)
+        config.append(('economic_field', 'custom_field'))
+        jira = Jira(config)
+        fields = {'id': 1, 'custom_field': '123 — project name', 'other_field': 234}
+        assert jira.get_project_id(fields) == 123
 
     @responses.activate
     def test_hours_without_worklog(self):

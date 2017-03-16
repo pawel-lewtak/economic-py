@@ -112,7 +112,7 @@ class Jira(object):
         :return: int|None
         """
         if type(field) is dict:
-            project_id = str(field['value'])
+            project_id = str(field['value']).encode('ascii', 'replace')
         else:
             project_id = str(field)
 
