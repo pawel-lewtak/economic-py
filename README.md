@@ -1,6 +1,10 @@
 # economic-py
 
+**WARNING: This project is no longer actively maintained.**
+
 Prefill E-Conomic with meetings and tasks without hassle!
+
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
 [![Build status](https://travis-ci.org/pawel-lewtak/economic-py.png)](https://travis-ci.org/pawel-lewtak/economic-py) [![Code Health](https://landscape.io/github/pawel-lewtak/economic-py/master/landscape.svg)](https://landscape.io/github/pawel-lewtak/economic-py/master) [![Requirements Status](https://requires.io/github/pawel-lewtak/economic-py/requirements.svg?branch=master)](https://requires.io/github/pawel-lewtak/economic-py/requirements/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/pawel-lewtak/economic-py/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/pawel-lewtak/economic-py/?branch=master) [![Coverage Status](https://coveralls.io/repos/pawel-lewtak/economic-py/badge.svg)](https://coveralls.io/r/pawel-lewtak/economic-py) [![BCH compliance](https://bettercodehub.com/edge/badge/pawel-lewtak/economic-py)](https://bettercodehub.com/) [![MIT licensed](https://img.shields.io/github/license/pawel-lewtak/economic-py.svg)](https://raw.githubusercontent.com/pawel-lewtak/economic-py/master/LICENSE)
 
